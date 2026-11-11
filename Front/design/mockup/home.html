@@ -1,0 +1,591 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HYFE 한양금융공학회</title>
+<meta name="description" content="2007년부터 리서치 · IBD · 파생상품 · 퀀트, 4개 팀으로 금융 전반을 다뤄 온 한양대학교 금융공학회.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="../design-system/tokens.css">
+<link rel="stylesheet" href="../design-system/components.css">
+<style>
+  /* ===== 홈 v11 (v10 + IBD 사진 위치 중간값): 짧은 홈(4블록) + 메뉴는 각 페이지로 (토큰만 사용) ===== */
+  :root { --ref: url("img/hero.png"); }  /* 본관 블루아워 (AI 생성, 11/11 사용자 제공) */
+
+  /* v9: 한 화면씩 멈추는 스크롤 스냅 삭제. 화면 한 장 높이는 히어로만 */
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+  .block { padding-block: var(--sp-9); }
+  @media (min-width: 1024px) { #recruit > .container, .block > .container { padding-right: calc(var(--gutter) + 120px); } } /* 오른쪽 목차 자리 */
+  [id] { scroll-margin-top: var(--header-h); }
+
+  /* 상단 고정 */
+  .top { position: fixed; inset: 0 0 auto; z-index: var(--z-header); }
+  .top .site-header { position: relative; }
+  body:not(.is-member) .member-bar { display: none; }
+  .nav__auth[hidden] { display: none; }
+
+  /* 1. 히어로 */
+  .hero { position: relative; min-height: max(600px, 100svh); display: flex; align-items: flex-end; color: var(--on-dark);
+    background: var(--hy-blue-night) url("img/hero.png") 62% 55% / cover no-repeat; isolation: isolate; }
+  .hero::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--ref) 62% 55% / cover no-repeat; }
+  .hero::after { content: ""; position: absolute; inset: 0; z-index: -1;
+    background: linear-gradient(180deg, rgba(6,31,58,0.70) 0%, rgba(6,31,58,0.20) 34%, rgba(6,31,58,0.30) 58%, rgba(6,31,58,0.88) 100%); }
+  .hero.has-photo::before { display: none; }
+  .hero > .container { width: 100%; }
+  .hero__inner { padding-block: calc(var(--header-h) + var(--sp-9)) var(--sp-9); }
+  .hero__title { font-family: var(--font-display); font-size: var(--fs-display); font-weight: var(--fw-semi); line-height: var(--lh-display); letter-spacing: var(--ls-en-disp); color: var(--on-dark-soft); }
+  .hero__title b { color: var(--on-dark); font-weight: inherit; }
+  .hero__title .line { display: block; }
+  .hero__sub { margin-top: var(--sp-6); font-size: var(--fs-lead); color: var(--on-dark-soft); max-width: 31rem; }
+  .hero__sub strong { color: var(--on-dark); font-weight: var(--fw-semi); }
+  .hero__cta { margin-top: var(--sp-7); }
+  .js .hero__title .line, .js .hero__sub, .js .hero__cta { animation: rise var(--dur-slow) var(--ease-out) both; }
+  .js .hero__title .line:nth-child(1) { animation-delay: 120ms; }
+  .js .hero__title .line:nth-child(2) { animation-delay: calc(120ms + var(--stagger)); }
+  .js .hero__title .line:nth-child(3) { animation-delay: calc(120ms + var(--stagger) * 2); }
+  .js .hero__sub { animation-delay: calc(120ms + var(--stagger) * 3); }
+  .js .hero__cta { animation-delay: calc(120ms + var(--stagger) * 4); }
+  @keyframes rise { from { opacity: 0; transform: translateY(0.4em); } }
+
+  /* 섹션별 배경 사진: img/ 폴더에 bg-섹션이름.jpg를 넣으면 자동 교체, 없으면 본관 사진(hero.png)을 다르게 잘라 씀
+     ※ 주소는 페이지 기준이어야 해서 변수가 아니라 여기서 직접 지정 */
+  #reports::before { background-image: url("img/bg-research.jpg"), url("img/hero.png"); background-position: 0% 55%; }
+  #recruit::before { background-image: url("img/bg-recruit.jpg"), url("img/hero.png");  background-position: 60% 45%; }
+  .page-hero::before { background-image: url("img/bg-page.jpg"), url("img/hero.png");     background-position: 30% 70%; }
+
+  .lead-col { max-width: 46rem; }
+  .label { font-family: var(--font-en); font-size: var(--fs-label); font-weight: var(--fw-medium); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--c-accent); margin-bottom: var(--sp-5); }
+  .label--on-dark { color: var(--on-dark-soft); }
+
+  /* 2. 4개 팀 소개 (v8에서 복원, 11/11 사용자 요청: "이 뒤에 팀별 커리 자세히") */
+  /* 3. 4개 팀: 왼쪽 흐름도 + 오른쪽 문장·팀 목록 */
+  .teams-layout { display: grid; grid-template-columns: minmax(320px, 1fr) 1.05fr; gap: var(--sp-8); align-items: center; }
+  .cycle { width: 100%; max-width: 500px; height: auto; justify-self: center; overflow: visible; }
+  .cycle .ring { fill: none; stroke: var(--rule-strong); stroke-width: 1.25; stroke-dasharray: 3 7; }
+  .cycle .arrow { fill: none; stroke: var(--ink-faint); stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .cycle .node circle { fill: var(--paper); stroke: var(--rule-strong); stroke-width: 1; }
+  .cycle .node--accent circle { stroke: var(--c-accent); stroke-width: 1.5; }
+  .cycle .en { font-family: var(--font-en); font-weight: 700; font-size: 21px; fill: var(--ink); letter-spacing: 0.02em; }
+  .cycle .ko { font-family: var(--font-ko); font-weight: 500; font-size: 14px; fill: var(--ink-muted); }
+  .cycle .hub-1 { font-family: var(--font-en); font-weight: 700; font-size: 30px; fill: var(--c-accent); letter-spacing: 0.04em; }
+  .cycle .hub-2 { font-family: var(--font-ko); font-weight: 600; font-size: 14px; fill: var(--ink); }
+  .cycle .hub-3 { font-family: var(--font-ko); font-weight: 400; font-size: 13px; fill: var(--ink-muted); }
+  .team-list { list-style: none; margin: var(--sp-7) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 var(--sp-6); }
+  .team-list li { padding-block: var(--sp-4); border-top: var(--bw-strong) solid var(--ink); }
+  .team-list__en { font-family: var(--font-en); font-weight: var(--fw-semi); font-size: var(--fs-lead); color: var(--ink); }
+  .team-list__ko { margin-left: var(--sp-2); font-size: var(--fs-small); color: var(--c-meta); }
+  .team-list p { margin-top: var(--sp-1); font-size: var(--fs-small); color: var(--c-text); }
+
+  #teams::before { background-image: url("img/bg-teams.jpg"), url("img/hero.png"); background-position: 85% 35%; }
+  #teams { padding-bottom: var(--sp-8); }
+
+  /* 3. 팀별 커리큘럼: 펼침 패널 (v8 TEAMS + CURRICULUM을 하나로)
+     v9: 배경을 팀별 사진(흰·회·남색, 왼쪽은 글 자리, 오른쪽에 사물)으로 바꾸고 글씨는 남색.
+     닫힌 카드는 왼쪽 빈 여백만 보이고, 펼치면 오른쪽 사물이 드러남 */
+  #curriculum { background: var(--paper-alt); color: var(--hy-blue-deep); padding-top: var(--sp-8); }
+  #curriculum :focus-visible { outline-color: var(--hy-blue-deep); }
+  #recruit :focus-visible, #page .page-hero :focus-visible { outline-color: var(--on-dark); }
+  #curriculum .label { color: var(--c-accent); }
+  .panels { --panel-h: min(620px, max(560px, calc(100svh - var(--header-h) - 200px))); display: flex; gap: 6px; height: var(--panel-h); }
+  .panel { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: var(--r-md); color: var(--hy-blue-deep); cursor: pointer; isolation: isolate;
+    background: #F1F1EF 0% 50% / cover no-repeat; box-shadow: inset 0 0 0 1px rgba(10,56,102,0.08);
+    transition: flex-grow 560ms cubic-bezier(0.22, 1, 0.36, 1), background-position 560ms cubic-bezier(0.22, 1, 0.36, 1); }
+  .panel[data-team="research"]    { background-image: url("img/curriculum_research.jpg"); }
+  .panel[data-team="ibd"]         { background-image: url("img/curriculum_ibd.jpg"); }
+  /* IBD: 노트 위 결합 도식이 글에 가리지 않게 사진 높이를 카드에 맞추고, 노트 도식 왼쪽 끝이 항상 카드 폭 64%(글 바로 오른쪽)에 오도록 계산 (v10 -200px은 큰 화면에서 너무 감, 고정 px은 화면마다 달라짐)(오른쪽 노트북·펜이 조금 잘림), 높이 기준으로 맞춤 (11/11) */
+  @media (min-width: 1024px) { .panel.is-open[data-team="ibd"] { background-size: auto 100%; background-position: calc(64% + 0.189 * var(--panel-h)) 50%; background-color: #EFEEEC; } }
+  .panel[data-team="derivatives"] { background-image: url("img/curriculum_derivatives.jpg"); }
+  .panel[data-team="quant"]       { background-image: url("img/curriculum_quant.jpg"); }
+  /* 글 쪽(왼쪽)만 살짝 밝혀 글씨를 지킴 */
+  .panel::after { content: ""; position: absolute; inset: 0; z-index: -1; background: rgba(250,250,249,0.35); transition: background var(--dur-slow) var(--ease-out); }
+  .panel.is-open { flex-grow: 4.2; cursor: default; background-position: 100% 50%; }
+  .panel.is-open::after { background: linear-gradient(90deg, rgba(250,250,249,0.95) 0%, rgba(250,250,249,0.9) 46%, rgba(250,250,249,0) 74%); }
+  .panel:not(.is-open):hover::after { background: rgba(250,250,249,0.15); }
+  .panel__btn { position: absolute; inset: 0; z-index: 2; background: none; border: 0; border-radius: inherit; }
+  .panel.is-open .panel__btn { pointer-events: none; }
+  .panel__btn:focus-visible { outline: var(--bw-strong) solid var(--hy-blue-deep); outline-offset: -4px; }
+  .panel__closed { position: absolute; left: var(--sp-5); bottom: var(--sp-5); transition: opacity var(--dur-fast) var(--ease-out); }
+  .panel__closed b { display: block; font-family: var(--font-en); font-size: var(--fs-h2); font-weight: var(--fw-semi); writing-mode: vertical-rl; transform: rotate(180deg); }
+  .panel__closed span { display: block; margin-top: var(--sp-3); font-size: var(--fs-small); color: var(--ink-soft); }
+  .panel__open { position: absolute; inset: 0; z-index: 3; padding: var(--sp-6); display: flex; flex-direction: column; width: min(520px, 62%); opacity: 0; transform: translateY(12px); visibility: hidden;
+    transition: opacity var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out), visibility 0s linear var(--dur-base); pointer-events: none; }
+  .panel.is-open .panel__closed { opacity: 0; }
+  .panel.is-open .panel__open { opacity: 1; transform: none; visibility: visible; transition-delay: 180ms, 180ms, 0s; pointer-events: auto; }
+  .panel__en { font-family: var(--font-en); font-size: var(--fs-h1); font-weight: var(--fw-semi); line-height: 1; }
+  .panel__desc { margin-top: var(--sp-3); color: var(--ink-soft); }
+  .panel__lvs { list-style: none; margin: auto 0 0; padding: 0; display: grid; }
+  .panel__lvs li { display: grid; grid-template-columns: 5rem 1fr auto; gap: var(--sp-4); align-items: baseline; padding-block: var(--sp-4); border-top: var(--bw) solid rgba(10,56,102,0.18); color: var(--ink); }
+  .panel__lvs b { font-family: var(--font-en); font-size: var(--fs-h3); font-weight: var(--fw-bold); line-height: 1.1; color: var(--hy-blue-deep); }
+  .panel__lvs small { display: block; font-family: var(--font-ko); font-size: 0.75rem; font-weight: var(--fw-medium); color: var(--ink-muted); }
+  .panel__lvs .goal { border-top: var(--bw-strong) solid var(--hy-blue-deep); align-items: center; padding-top: var(--sp-5); }
+  .goal__name { white-space: nowrap; font-size: var(--fs-h3); font-weight: var(--fw-heavy); letter-spacing: -0.02em; color: var(--hy-blue-deep); }
+  .goal__status { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: var(--bw) solid rgba(10,56,102,0.35); border-radius: var(--r-pill); font-size: 0.75rem; color: var(--hy-blue-deep); white-space: nowrap; }
+  .goal__status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid currentColor; }
+  .panel__more { margin-top: var(--sp-4); align-self: flex-start; }
+  .common-line { margin-top: var(--sp-5); display: flex; flex-wrap: wrap; gap: var(--sp-2) var(--sp-6); font-size: var(--fs-small); color: var(--ink-soft); }
+  .common-line b { font-weight: var(--fw-semi); margin-right: var(--sp-2); color: var(--hy-blue-deep); }
+
+  /* 3. 리포트 */
+  .reports__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--sp-4); margin-bottom: var(--sp-7); }
+  body:not(.has-reports) .report-grid { display: none; }
+  body.has-reports #reports .empty { display: none; }
+  #reports .empty { padding-block: var(--sp-8); background: rgba(255,255,255,0.72); }
+
+  /* 4. 모집: 화면 한 장 → 짧은 띠 (일정·절차는 RECRUITING 페이지로) */
+  #recruit { padding-block: var(--sp-8); }
+  .recruit__inner { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: var(--sp-6) var(--sp-8); }
+  .recruit__inner .statement { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem); }
+  .recruit__actions { display: flex; flex-wrap: wrap; gap: var(--sp-3); }
+  #recruit .badge--soon { background: rgba(255,255,255,0.16); color: var(--on-dark); }
+  #recruit .badge--closed { background: rgba(255,255,255,0.10); color: var(--on-dark-soft); }
+  #recruit .badge { margin-bottom: var(--sp-4); }
+
+  /* ===== 하위 페이지 자리 (시안 전용: 메뉴를 누르면 이 화면으로 넘어감) ===== */
+  #page { display: none; }
+  body.is-route #main, body.is-route .side-nav { display: none !important; }
+  body.is-route #page { display: block; }
+  .page-hero { min-height: min(52svh, 520px); display: flex; align-items: flex-end; padding-block: calc(var(--header-h) + var(--sp-8)) var(--sp-8); }
+  .page-hero > .container { width: 100%; }
+  .crumb { display: flex; flex-wrap: wrap; gap: var(--sp-2); margin: 0 0 var(--sp-5); padding: 0; list-style: none;
+    font-family: var(--font-en); font-size: var(--fs-label); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--on-dark-soft); }
+  .crumb li + li::before { content: "/"; margin-right: var(--sp-2); opacity: 0.6; }
+  .crumb a { color: inherit; text-decoration: none; }
+  .crumb a:hover { color: var(--on-dark); text-decoration: underline; text-underline-offset: 4px; }
+  .crumb [aria-current] { color: var(--on-dark); }
+  .page-hero__title { font-family: var(--font-display); font-size: clamp(3rem, 1.6rem + 6vw, 6rem); font-weight: var(--fw-semi); line-height: 0.95; letter-spacing: var(--ls-en-disp); }
+  .page-hero__title { color: var(--on-dark); }
+  .page-hero__title:focus { outline: none; }
+  .page-hero__ko { margin-top: var(--sp-4); font-size: var(--fs-lead); color: var(--on-dark-soft); }
+  .js #page.is-entering .page-hero__title, .js #page.is-entering .page-hero__ko { animation: rise var(--dur-slow) var(--ease-out) both; }
+  .js #page.is-entering .page-hero__ko { animation-delay: var(--stagger); }
+  .page-plan { display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--sp-8); align-items: start; }
+  .page-plan__note { color: var(--c-text); max-width: 26rem; }
+  .page-plan__note h2 { font-size: var(--fs-h3); font-weight: var(--fw-bold); color: var(--ink); margin-bottom: var(--sp-3); }
+  .page-plan__note .btn { margin-top: var(--sp-6); }
+  .plan-list { list-style: none; margin: 0; padding: 0; border-top: var(--bw-strong) solid var(--ink); counter-reset: p; }
+  .plan-list li { display: grid; grid-template-columns: 2.5rem 1fr; gap: var(--sp-3); padding-block: var(--sp-5); border-bottom: var(--bw) solid var(--c-border); color: var(--ink); }
+  .plan-list li::before { counter-increment: p; content: counter(p, decimal-leading-zero); font-family: var(--font-en); font-weight: var(--fw-semi); color: var(--c-accent); font-size: var(--fs-small); padding-top: 2px; }
+  .plan-list small { display: block; margin-top: var(--sp-1); color: var(--c-meta); font-size: var(--fs-small); }
+
+  /* 반응형 */
+  @media (max-width: 1023px) {
+    .teams-layout { grid-template-columns: 1fr; gap: var(--sp-7); }
+    .cycle { max-width: 420px; }
+    .panels { flex-direction: column; height: auto; min-height: 0; }
+    .panel, .panel.is-open { flex: none; min-height: 520px; cursor: default; background-position: 70% 100%; }
+    .panel::after, .panel.is-open::after { background: linear-gradient(180deg, rgba(250,250,249,0.95) 0%, rgba(250,250,249,0.9) 78%, rgba(250,250,249,0.4) 100%); }
+    .panel .panel__closed, .panel__btn { display: none; }
+    .panel .panel__open { opacity: 1; transform: none; visibility: visible; position: relative; min-height: 520px; width: 100%; pointer-events: auto; padding: var(--sp-5); }
+    .page-plan { grid-template-columns: 1fr; gap: var(--sp-6); }
+  }
+  @media (max-width: 639px) { .team-list { grid-template-columns: 1fr; } }
+  @media (max-width: 639px) { .block { padding-block: var(--sp-8); } }
+
+  /* 시안 확인용 패널 (배포 시 삭제) */
+  .proto { position: fixed; z-index: var(--z-toast); left: var(--sp-4); bottom: var(--sp-4); display: grid; gap: var(--sp-1); padding: var(--sp-3) var(--sp-4);
+    background: var(--paper); border: var(--bw) solid var(--rule-strong); border-radius: var(--r-md); box-shadow: var(--sh-3); font-size: var(--fs-small); }
+  .proto__t { font-weight: var(--fw-semi); color: var(--ink); font-size: 0.75rem; padding-right: var(--sp-6); }
+  .proto .check { min-height: 32px; }
+  .proto select { min-height: 32px; border: var(--bw) solid var(--rule-strong); border-radius: var(--r-sm); padding: 0 var(--sp-3); background: var(--paper); }
+  .proto__hide { position: absolute; top: 4px; right: 4px; width: 28px; height: 28px; display: grid; place-items: center; background: none; border: 0; color: var(--c-meta); border-radius: var(--r-sm); }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-board" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19h16M7 15l4-4 3 3 5-6"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5h14v10H9l-4 4z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.8 7.2h.01"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13.5 6.5 5h11l2.5 8.5V19H4z"/><path d="M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20"/></symbol>
+</svg>
+
+<a class="sr-only" href="#main">본문으로 건너뛰기</a>
+
+<div class="top">
+  <div class="member-bar">
+    <div class="container member-bar__inner">
+      <span class="member-bar__hello"><strong>김한양</strong>님, 리서치팀 · 39기</span>
+      <ul class="member-bar__links">
+        <li><a href="/member/board"><svg class="icon"><use href="#i-board"/></svg>팀 게시판</a></li>
+        <li><a href="/member/market"><svg class="icon"><use href="#i-chart"/></svg>시황</a></li>
+        <li><a href="/member/interviews"><svg class="icon"><use href="#i-chat"/></svg>면접 후기</a></li>
+      </ul>
+    </div>
+  </div>
+  <header class="site-header site-header--on-photo" id="siteHeader">
+    <div class="container site-header__inner">
+      <a class="brand" href="/"><span class="brand__mark">HYFE</span><span class="brand__name">한양금융공학회</span></a>
+      <nav class="nav" aria-label="주 메뉴">
+        <!-- v9: 메뉴는 각 페이지로 (실제 사이트 주소 그대로. 시안에서는 스크립트가 '준비 중' 화면으로 연결) -->
+        <ul class="nav__list">
+          <li><a class="nav__link" href="/" aria-current="page">Home</a></li>
+          <li><a class="nav__link" href="/about">About</a></li>
+          <li><a class="nav__link" href="/member">Member</a></li>
+          <li><a class="nav__link" href="/reports">Reports</a></li>
+          <li><a class="nav__link" href="/recruiting">Recruiting</a></li>
+        </ul>
+        <div class="nav__auth" data-guest>
+          <a class="btn btn--on-dark btn--text btn--s" href="/login"><span class="btn__label">Login</span></a>
+          <a class="btn btn--on-dark btn--secondary btn--s" href="/signup">Join</a>
+        </div>
+        <div class="nav__auth" data-member hidden>
+          <a class="btn btn--on-dark btn--text btn--s" href="/logout"><span class="btn__label">Logout</span></a>
+        </div>
+      </nav>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>Menu <svg class="icon"><use href="#i-menu"/></svg></button>
+    </div>
+  </header>
+</div>
+
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="menu__layer"></div><div class="menu__layer"></div>
+  <div class="menu__panel" role="dialog" aria-modal="true" aria-label="전체 메뉴">
+    <div class="menu__top">
+      <a class="brand" href="/" style="color:var(--on-dark)"><span class="brand__mark">HYFE</span></a>
+      <button class="menu-toggle" type="button" style="display:inline-flex;color:var(--on-dark)" data-menu-close>Close <svg class="icon"><use href="#i-x"/></svg></button>
+    </div>
+    <ul class="menu__list">
+      <li><a href="/">Home <small>홈</small></a></li>
+      <li><a href="/about">About <small>학회 소개</small></a></li>
+      <li><a href="/member">Member <small>회원</small></a></li>
+      <li><a href="/reports">Reports <small>리포트</small></a></li>
+      <li><a href="/recruiting">Recruiting <small>모집</small></a></li>
+    </ul>
+    <div class="menu__auth">
+      <a class="btn btn--on-dark btn--secondary btn--l" href="/login">Login</a>
+      <a class="btn btn--on-dark btn--primary btn--l" href="/signup">Join</a>
+    </div>
+  </div>
+</div>
+
+<!-- 오른쪽 섹션 목차 (홈에서만) -->
+<nav class="side-nav side-nav--on-dark" id="sideNav" aria-label="홈 섹션">
+  <ol>
+    <li><a href="#home" aria-current="true">hyfe</a></li>
+    <li><a href="#teams">teams</a></li>
+    <li><a href="#curriculum">curriculum</a></li>
+    <li><a href="#reports">reports</a></li>
+    <li><a href="#recruit">recruiting</a></li>
+  </ol>
+</nav>
+
+<main id="main">
+  <!-- 1. 히어로 -->
+  <section class="hero" id="home" data-dark aria-labelledby="heroTitle">
+    <div class="container hero__inner">
+      <h1 class="hero__title" id="heroTitle" aria-label="HanYang Financial Engineering">
+        <span class="line" aria-hidden="true"><b>H</b>an<b>Y</b>ang</span>
+        <span class="line" aria-hidden="true"><b>F</b>inancial</span>
+        <span class="line" aria-hidden="true"><b>E</b>ngineering</span>
+      </h1>
+      <p class="hero__sub">2007년부터 <strong>리서치 · IBD · 파생상품 · 퀀트</strong>, 4개 팀으로 금융 전반을 다뤄 온 한양대학교 금융공학회입니다.</p>
+      <div class="hero__cta">
+        <a class="btn btn--on-dark btn--primary btn--l" href="#teams">팀·커리큘럼 보기 <svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 4개 팀 -->
+  <section class="block photo-section" id="teams" aria-labelledby="teamsTitle">
+    <div class="container teams-layout">
+      <svg class="cycle" viewBox="0 0 520 520" role="img" aria-labelledby="cycleT cycleD">
+        <title id="cycleT">HYFE 4개 팀 구조</title>
+        <desc id="cycleD">리서치, IBD, 파생상품, 퀀트 4개 팀이 둘러싸고, 가운데에서 팀마다 1명씩 4인 1조로 연합 스터디를 합니다.</desc>
+        <circle class="ring" cx="260" cy="260" r="158"/>
+        <!-- 순환 화살표 (시계 방향) -->
+        <path class="arrow" d="M366 128 l10 6 -2 -11"/>
+        <path class="arrow" d="M392 366 l-6 10 11 -2"/>
+        <path class="arrow" d="M154 392 l-10 -6 2 11"/>
+        <path class="arrow" d="M128 154 l6 -10 -11 2"/>
+        <g class="node node--accent"><circle cx="260" cy="102" r="74"/><text class="en" x="260" y="100" text-anchor="middle">Research</text><text class="ko" x="260" y="124" text-anchor="middle">리서치</text></g>
+        <g class="node node--accent"><circle cx="418" cy="260" r="74"/><text class="en" x="418" y="258" text-anchor="middle">IBD</text><text class="ko" x="418" y="282" text-anchor="middle">IB 딜</text></g>
+        <g class="node node--accent"><circle cx="260" cy="418" r="74"/><text class="en" x="260" y="416" text-anchor="middle">Derivatives</text><text class="ko" x="260" y="440" text-anchor="middle">파생상품</text></g>
+        <g class="node node--accent"><circle cx="102" cy="260" r="74"/><text class="en" x="102" y="258" text-anchor="middle">Quant</text><text class="ko" x="102" y="282" text-anchor="middle">퀀트</text></g>
+        <text class="hub-1" x="260" y="256" text-anchor="middle">HYFE</text>
+        <text class="hub-2" x="260" y="282" text-anchor="middle">팀 연합 스터디</text>
+        <text class="hub-3" x="260" y="302" text-anchor="middle">팀마다 1명씩, 4인 1조</text>
+      </svg>
+      <div>
+        <p class="label">Our Teams</p>
+        <h2 class="statement" id="teamsTitle">리서치부터 퀀트까지,<br><strong>금융 전반</strong>을 다룹니다</h2>
+        <p class="statement-lead">가치투자 한 분야가 아니라 기업분석, IB 딜, 파생상품 프라이싱, 퀀트 모델링을 4개 팀이 나눠 맡고, 연합 스터디로 서로의 시각을 섞습니다.</p>
+        <ul class="team-list">
+          <li><span class="team-list__en">Research</span><span class="team-list__ko">리서치팀</span><p>산업과 기업을 분석해 가치를 매기고 보고서로 씁니다.</p></li>
+          <li><span class="team-list__en">IBD</span><span class="team-list__ko">IBD팀</span><p>M&amp;A·IPO 딜 구조를 익히고 투자제안서를 씁니다.</p></li>
+          <li><span class="team-list__en">Derivatives</span><span class="team-list__ko">파생상품팀</span><p>옵션·선물·스왑을 프라이싱하고 리스크를 관리합니다.</p></li>
+          <li><span class="team-list__en">Quant</span><span class="team-list__ko">퀀트팀</span><p>Python으로 포트폴리오 모델을 만들고 검증합니다.</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 팀별 커리큘럼 (펼침 패널): 위 4개 팀 소개 다음에 팀별로 자세히 -->
+  <section class="block" id="curriculum" aria-labelledby="curTitle">
+    <div class="container">
+      <p class="label">Curriculum</p>
+      <h2 class="sr-only" id="curTitle">팀별 커리큘럼</h2>
+      <div class="panels" id="panels">
+        <article class="panel is-open" data-team="research"></article>
+        <article class="panel" data-team="ibd"></article>
+        <article class="panel" data-team="derivatives"></article>
+        <article class="panel" data-team="quant"></article>
+      </div>
+      <p class="common-line"><span><b>정규 세션</b>매주 월·목 19:00~22:00</span><span><b>참가 대회</b>타임폴리오 · 월드퀀트 IQC · CFA 리서치 챌린지 · DB GAPS · DB 보험금융공모전</span></p>
+    </div>
+  </section>
+
+  <!-- 3. 리포트 -->
+  <section class="block photo-section" id="reports" aria-labelledby="reportsTitle">
+    <div class="container">
+      <div class="reports__head">
+        <div class="lead-col">
+          <p class="label">Latest Reports</p>
+          <h2 class="statement" id="reportsTitle">말보다<br><strong>결과물</strong>로 보여줍니다</h2>
+        </div>
+        <a class="btn btn--text" href="/reports"><span class="btn__label">More Reports</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+      </div>
+      <div class="empty">
+        <svg class="icon empty__icon"><use href="#i-inbox"/></svg>
+        <h3 class="empty__title">리포트를 옮겨오는 중입니다</h3>
+        <p class="empty__desc">지금까지의 리포트는 네이버 카페에 있습니다. 팀별 결과물을 이곳으로 차례로 옮기고 있습니다.</p>
+        <div class="empty__actions">
+          <a class="btn btn--secondary btn--s" href="https://cafe.naver.com/hanyangfe">카페에서 보기</a>
+          <a class="btn btn--text btn--s" href="/curriculum"><span class="btn__label">커리큘럼 보기</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+      <div class="report-grid" id="reportGrid">
+        <article class="report-card"><div class="report-card__top"><span class="badge badge--team">Research</span><span class="report-card__term">26-2</span></div>
+          <p class="report-card__company">(예시) 기업 A</p><h3 class="report-card__title"><a href="/reports/24">전력기기 업황과 수주잔고 점검</a></h3>
+          <div class="report-card__foot"><span class="num">2026.10.24</span><a class="report-card__pdf" href="/reports/24"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+        <article class="report-card"><div class="report-card__top"><span class="badge badge--team">IBD</span><span class="report-card__term">26-2</span></div>
+          <p class="report-card__company">(예시) 딜 B</p><h3 class="report-card__title"><a href="/reports/23">LBO 사례로 본 인수금융 구조</a></h3>
+          <div class="report-card__foot"><span class="num">2026.10.10</span><a class="report-card__pdf" href="/reports/23"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+        <article class="report-card"><div class="report-card__top"><span class="badge badge--team">Derivatives</span><span class="report-card__term">26-1</span></div>
+          <p class="report-card__company">(예시) FICC</p><h3 class="report-card__title"><a href="/reports/22">금리 스왑 헤지 피치북</a></h3>
+          <div class="report-card__foot"><span class="num">2026.06.02</span><a class="report-card__pdf" href="/reports/22"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+        <article class="report-card"><div class="report-card__top"><span class="badge badge--team">Quant</span><span class="report-card__term">26-1</span></div>
+          <p class="report-card__company">(예시) KOSPI</p><h3 class="report-card__title"><a href="/reports/21">저변동성 포트폴리오 백테스트</a></h3>
+          <div class="report-card__foot"><span class="num">2026.05.21</span><a class="report-card__pdf" href="/reports/21"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 모집 (짧은 띠) -->
+  <section class="photo-section photo-section--dark" id="recruit" data-dark aria-labelledby="recruitTitle">
+    <div class="container recruit__inner">
+      <div>
+        <span class="badge badge--soon" id="recruitBadge">모집 예정</span>
+        <h2 class="statement statement--on-dark" id="recruitTitle"><span id="recruitGen">39</span>기, <strong>금융 전반</strong>을 함께 배울 사람을 찾습니다</h2>
+      </div>
+      <div class="recruit__actions">
+        <a class="btn btn--on-dark btn--primary btn--l" href="/recruiting">Join Us</a>
+        <a class="btn btn--on-dark btn--secondary btn--l" href="/recruiting#process">모집 절차 보기</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- 하위 페이지 자리 (시안 전용. 실제 사이트에서는 각 주소가 별도 페이지) -->
+<div id="page" aria-live="polite">
+  <section class="page-hero photo-section photo-section--dark" data-dark>
+    <div class="container">
+      <ol class="crumb" id="pageCrumb" aria-label="현재 위치"></ol>
+      <h1 class="page-hero__title" id="pageTitle" tabindex="-1">About</h1>
+      <p class="page-hero__ko" id="pageKo">학회 소개</p>
+    </div>
+  </section>
+  <section class="block">
+    <div class="container page-plan">
+      <div class="page-plan__note">
+        <h2>다음 단계에서 디자인할 페이지입니다</h2>
+        <p>지금은 메뉴 이동만 확인하는 자리입니다. 오른쪽 내용이 이 페이지에 들어갑니다.</p>
+        <a class="btn btn--secondary" href="/"><svg class="icon btn__icon"><use href="#i-back"/></svg>홈으로</a>
+      </div>
+      <ol class="plan-list" id="pagePlan"></ol>
+    </div>
+  </section>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div><a class="brand" href="/"><span class="brand__mark">HYFE</span><span class="brand__name">한양금융공학회</span></a>
+        <p style="margin-top:var(--sp-3)">Since 2007 · HanYang Financial Engineering</p></div>
+      <div class="site-footer__contact">
+        <a href="mailto:hanyanghyfe@naver.com"><svg class="icon"><use href="#i-mail"/></svg>hanyanghyfe@naver.com</a>
+        <a href="https://www.instagram.com/hanyang_hyfe/"><svg class="icon"><use href="#i-insta"/></svg>@hanyang_hyfe</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© 2026 HYFE. All rights reserved.</p>
+  </div>
+</footer>
+
+<aside class="proto" id="proto" aria-label="시안 상태 바꾸기">
+  <button class="proto__hide" type="button" aria-label="패널 닫기" onclick="this.parentElement.remove()"><svg class="icon" style="width:16px;height:16px"><use href="#i-x"/></svg></button>
+  <span class="proto__t">시안 상태</span>
+  <label class="check"><input type="checkbox" id="pMember"><span class="check__box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>로그인한 학회원</label>
+  <label class="check"><input type="checkbox" id="pReports"><span class="check__box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>리포트 있음(예시)</label>
+  <label style="display:flex;gap:var(--sp-2);align-items:center">개수 <select id="pCount"><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+  <label style="display:flex;gap:var(--sp-2);align-items:center">모집 <select id="pRecruit"><option value="soon">예정</option><option value="open">모집 중</option><option value="closed">마감</option></select></label>
+</aside>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  // 직접 찍은 히어로 사진(img/hero.png)이 있으면 참고 사진 대신 사용
+  const heroImg = new Image(); heroImg.onload = () => document.querySelector('.hero').classList.add('has-photo'); heroImg.src = 'img/hero.png';
+
+  /* ===== 페이지 이동 (시안 전용) =====
+     실제 사이트 주소(/about 등)는 HTML에 그대로 두고, 파일로 열었을 때만 #/about 으로 바꿔 '준비 중' 화면을 보여 줌.
+     Next.js로 옮길 때는 이 블록을 지우면 됨. */
+  const PAGES = {
+    '/about':      { en: 'About', ko: '학회 소개', plan: [
+                     ['학회 소개와 가치', '설립 2007년, 학기별 40~50명'],
+                     ['4개 팀 구조도', '팀마다 1명씩 4인 1조 연합 스터디 (홈에서 옮겨 옴)'],
+                     ['커리큘럼 자세히', '온보딩 1~4주 → 정규 팀 배정, 팀별 Lv1~Lv3'],
+                     ['연혁', '기간 탭: 최근 · 2021–2023 · 2018–2020 · 이전'],
+                     ['알럼나이', '450여 명 네트워크 숫자 (홈에서 옮겨 옴), 진출 분야, 네트워킹 프로그램']] },
+    '/curriculum': { en: 'Curriculum', ko: '커리큘럼', parent: '/about', plan: [
+                     ['온보딩 1~4주 타임라인', '이후 정규 팀 배정'],
+                     ['팀별 Lv1 교육 → Lv2 실습 → Lv3 프로젝트', '홈 펼침 패널의 자세한 버전'],
+                     ['정규 세션 · 멘토링 안내', '매주 월·목 19:00~22:00']] },
+    '/member':     { en: 'Member', ko: '회원 전용', plan: [
+                     ['로그인한 학회원만 들어올 수 있음', '로그인 전이면 로그인 화면으로 보냄'],
+                     ['팀 게시판'], ['시황'], ['면접 후기', '회원 전용, 외부 공개 안 함']] },
+    '/reports':    { en: 'Reports', ko: '리포트', plan: [
+                     ['분류 탭 · 검색'],
+                     ['리포트 표', '번호 · 분류 · 제목 · 작성자 · 발행일 · 조회수 · 자료'],
+                     ['페이지 넘김 · 빈 상태 안내']] },
+    '/recruiting': { en: 'Recruiting', ko: '모집', plan: [
+                     ['모집 상태 배지 · 일정 3단계', '서류 접수 → 서류 발표 → 대면 면접 (관리자가 수정)'],
+                     ['지원서 · 안내자료 다운로드'],
+                     ['인재상 · 모집 절차 5단계 · 지원 자격'],
+                     ['자주 묻는 질문']] },
+    '/login':      { en: 'Login', ko: '로그인', plan: [['아이디 · 비밀번호 · 로그인 상태 유지'], ['회원 메뉴 미리보기', '팀 게시판 · 시황 · 면접 후기']] },
+    '/signup':     { en: 'Join', ko: '회원가입', plan: [['이름 · 아이디 · 비밀번호 · 비밀번호 확인'], ['관리자 승인 후 가입 완료']] },
+    '/logout':     { en: 'Logout', ko: '로그아웃', plan: [['로그아웃 후 홈으로 이동']] }
+  };
+  const SUB = { '/reports/': { en: 'Report', ko: '리포트 상세', parent: '/reports', plan: [['리포트 정보', '분류 · 제목 · 작성자 · 발행일'], ['PDF 보기 · 다운로드']] },
+                '/member/board': { en: 'Board', ko: '팀 게시판', parent: '/member', plan: [['팀별 게시글 목록 · 글쓰기']] },
+                '/member/market': { en: 'Market', ko: '시황', parent: '/member', plan: [['시황 자료 목록']] },
+                '/member/interviews': { en: 'Interviews', ko: '면접 후기', parent: '/member', plan: [['면접 후기 목록 (150개 이상, 회원 전용)']] } };
+  const findPage = path => PAGES[path] || Object.entries(SUB).find(([k]) => path === k || (k.endsWith('/') && path.startsWith(k)))?.[1]
+    || { en: 'Page', ko: '준비 중', plan: [['아직 정하지 않은 페이지']] };
+
+  // 내부 링크(/로 시작)를 #/ 경로로 바꿈
+  document.querySelectorAll('a[href^="/"]').forEach(a => { const p = a.getAttribute('href'); a.dataset.route = p; a.setAttribute('href', p === '/' ? '#home' : '#' + p); });
+
+  const pageEl = document.getElementById('page'), main = document.getElementById('main');
+  const navLinks = [...document.querySelectorAll('.nav__link')];
+  let routed = false;
+  const route = () => {
+    const h = decodeURIComponent(location.hash);
+    routed = h.startsWith('#/');
+    document.body.classList.toggle('is-route', routed);
+    const path = routed ? h.slice(1).split('#')[0].replace(/\/$/, '') : '/';
+    const top = routed ? '/' + path.split('/')[1] : '/';
+    const topKey = top === '/curriculum' ? '/about' : top;
+    navLinks.forEach(a => a.dataset.route === topKey ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+    if (routed) {
+      const d = findPage(path), parent = d.parent && PAGES[d.parent];
+      document.title = `${d.en} | HYFE 한양금융공학회`;
+      pageTitle.textContent = d.en; pageKo.textContent = d.ko;
+      pageCrumb.innerHTML = `<li><a href="#home">Home</a></li>` + (parent ? `<li><a href="#${d.parent}">${parent.en}</a></li>` : '') + `<li aria-current="page">${d.en}</li>`;
+      pagePlan.innerHTML = d.plan.map(([t, s]) => `<li><div>${t}${s ? `<small>${s}</small>` : ''}</div></li>`).join('');
+      pageEl.classList.remove('is-entering'); void pageEl.offsetWidth; pageEl.classList.add('is-entering');
+      scrollTo({ top: 0, behavior: 'instant' }); pageTitle.focus({ preventScroll: true });
+    } else {
+      document.title = 'HYFE 한양금융공학회';
+    }
+    onScroll();
+  };
+  addEventListener('hashchange', route);
+
+  // 헤더: 사진 영역을 지나면 흰 배경 / 오른쪽 목차: 지금 섹션 표시, 어두운 섹션에서는 흰색
+  const header = document.getElementById('siteHeader'), hero = document.getElementById('home'), pageHero = pageEl.querySelector('.page-hero');
+  const side = document.getElementById('sideNav'), links = [...side.querySelectorAll('a')];
+  const sections = links.map(a => document.querySelector(a.getAttribute('href')));
+  function onScroll() {
+    const band = routed ? pageHero : hero;
+    header.classList.toggle('is-solid', band.getBoundingClientRect().bottom < header.offsetHeight + 40);
+    if (routed) return;
+    const mid = innerHeight / 2; let cur = sections[0];
+    sections.forEach(s => { if (s.getBoundingClientRect().top <= mid) cur = s; });
+    links.forEach((a, i) => a.setAttribute('aria-current', String(sections[i] === cur)));
+    side.classList.toggle('side-nav--on-dark', cur.hasAttribute('data-dark'));
+  }
+  addEventListener('scroll', onScroll, { passive: true });
+
+  // 모바일 메뉴
+  const menu = document.getElementById('menu');
+  const setMenu = open => {
+    menu.classList.toggle('is-open', open); menu.setAttribute('aria-hidden', String(!open));
+    document.querySelectorAll('[data-menu-open]').forEach(b => b.setAttribute('aria-expanded', String(open)));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) menu.querySelector('[data-menu-close]').focus();
+  };
+  document.querySelectorAll('[data-menu-open]').forEach(b => b.addEventListener('click', () => setMenu(true)));
+  menu.querySelector('[data-menu-close]').addEventListener('click', () => setMenu(false));
+  menu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => setMenu(false)));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('is-open')) setMenu(false); });
+
+  // 커리큘럼 펼침 패널 (홍보자료 26-2 기준)
+  const CUR = {
+    research:    { en: 'Research',    ko: '리서치팀',   desc: '산업과 기업을 분석해 가치를 매기고 보고서로 씁니다.', lv1: '기업분석 세미나, Valuation 이론', lv2: 'PER · EV/EBITDA · DCF 모델링', lv3: '산업·기업 심층 보고서 작성·발표, 대회 참가', out: '리서치 리포트' },
+    ibd:         { en: 'IBD',         ko: 'IBD팀',      desc: 'M&A·IPO 딜 구조를 익히고 투자제안서를 씁니다.', lv1: 'IB 업무 구조, LBO · Mezzanine', lv2: 'DCF 기반 Financial 모델링, M&A · IPO case study', lv3: '실제 사례 기반 IM(투자제안서) 작성', out: 'IM 투자제안서' },
+    derivatives: { en: 'Derivatives', ko: '파생상품팀', desc: '옵션·선물·스왑을 프라이싱하고 리스크를 관리합니다.', lv1: '옵션 · 선물 · 스왑 기초', lv2: '파생상품 프라이싱, 그릭스 기반 리스크 관리', lv3: 'FICC 솔루션 피치북, 매크로 리포트', out: 'FICC 피치북' },
+    quant:       { en: 'Quant',       ko: '퀀트팀',     desc: 'Python으로 포트폴리오 모델을 만들고 검증합니다.', lv1: 'Python 기초', lv2: 'Portfolio Management 모델, Python 실습', lv3: '주제별 팀 프로젝트, 논문의 한국시장 접목', out: '퀀트 프로젝트' }
+  };
+  const panels = document.getElementById('panels');
+  panels.querySelectorAll('.panel').forEach(p => {
+    const k = p.dataset.team, d = CUR[k], open0 = p.classList.contains('is-open');
+    p.innerHTML = `
+      <button class="panel__btn" type="button" aria-expanded="${open0}" aria-controls="panel-${k}"><span class="sr-only">${d.ko} 커리큘럼 펼치기</span></button>
+      <div class="panel__closed" aria-hidden="true"><b>${d.en}</b><span>${d.ko}</span></div>
+      <div class="panel__open" id="panel-${k}">
+        <div class="panel__en">${d.en}</div><p class="panel__desc">${d.desc}</p>
+        <ol class="panel__lvs">
+          <li><b>Lv1<small>교육</small></b><span>${d.lv1}</span></li>
+          <li><b>Lv2<small>실습</small></b><span>${d.lv2}</span></li>
+          <li><b>Lv3<small>프로젝트</small></b><span>${d.lv3}</span></li>
+          <li class="goal"><b>Output</b><span class="goal__name">${d.out}</span><span class="goal__status">준비 중</span></li>
+        </ol>
+        <a class="btn btn--text btn--s panel__more" href="#/curriculum#${k}"><span class="btn__label">${d.ko} 커리큘럼 자세히</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+      </div>`;
+    const open = () => panels.querySelectorAll('.panel').forEach(x => { x.classList.toggle('is-open', x === p); x.querySelector('.panel__btn').setAttribute('aria-expanded', x === p); });
+    p.addEventListener('mouseenter', () => matchMedia('(hover: hover) and (min-width: 1024px)').matches && open());
+    p.querySelector('.panel__btn').addEventListener('click', () => { open(); p.querySelector('.panel__more').focus({ preventScroll: true }); });
+  });
+
+  // 시안 상태 패널 (v8에서 주석에 묻혀 모집 배지가 안 바뀌던 버그 수정)
+  const recruitData = { soon: { label: '모집 예정', cls: 'badge--soon' }, open: { label: '모집 중', cls: 'badge--open' }, closed: { label: '모집 마감', cls: 'badge--closed' } };
+  const apply = () => {
+    document.body.classList.toggle('is-member', pMember.checked);
+    document.querySelectorAll('[data-guest]').forEach(el => el.hidden = pMember.checked);
+    document.querySelectorAll('[data-member]').forEach(el => el.hidden = !pMember.checked);
+    document.body.classList.toggle('has-reports', pReports.checked);
+    [...reportGrid.children].forEach((c, i) => c.hidden = i >= +pCount.value);
+    const r = recruitData[pRecruit.value];
+    recruitBadge.className = 'badge ' + r.cls; recruitBadge.innerHTML = (pRecruit.value === 'open' ? '<span class="badge__dot"></span>' : '') + r.label;
+    history.replaceState(null, '', '?' + new URLSearchParams({ member: +pMember.checked, reports: pReports.checked ? pCount.value : 0, recruit: pRecruit.value }) + location.hash);
+  };
+  const q = new URLSearchParams(location.search);
+  pMember.checked = q.get('member') === '1';
+  pReports.checked = +(q.get('reports') || 0) > 0; if (pReports.checked) pCount.value = q.get('reports');
+  if (q.get('recruit')) pRecruit.value = q.get('recruit');
+  [pMember, pReports, pCount, pRecruit].forEach(el => el.addEventListener('change', apply));
+  apply();
+  route();
+</script>
+</body>
+</html>

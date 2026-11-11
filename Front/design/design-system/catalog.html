@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HYFE 컴포넌트 카탈로그 v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* 카탈로그 페이지 전용 배치 (사이트에는 옮기지 않음) */
+  .cat-intro { padding-block: var(--sp-8) var(--sp-6); border-bottom: var(--bw) solid var(--c-border); }
+  .cat-intro p { margin-top: var(--sp-3); max-width: var(--measure); }
+  .cat-toc { display: flex; flex-wrap: wrap; gap: var(--sp-1) var(--sp-2); margin-top: var(--sp-5); padding: 0; list-style: none; }
+  .cat-toc a { display: inline-flex; align-items: center; min-height: var(--ctl-s); padding: 0 var(--sp-3); border-radius: var(--r-sm);
+    background: var(--paper-alt); color: var(--ink-soft); text-decoration: none; font-size: var(--fs-small); }
+  .cat-toc a:hover { background: var(--c-accent-soft); color: var(--c-accent); }
+  .cat-block { padding-block: var(--sp-8); border-bottom: var(--bw) solid var(--c-border); }
+  .cat-block > h2 { font-size: var(--fs-h2); margin-bottom: var(--sp-2); }
+  .cat-block > .cat-note { color: var(--c-meta); font-size: var(--fs-small); margin-bottom: var(--sp-6); max-width: var(--measure); }
+  .cat-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--sp-4); padding-block: var(--sp-4); }
+  .cat-row + .cat-row { border-top: var(--bw) dashed var(--c-border); }
+  .cat-row__k { width: 140px; flex: none; font-family: var(--font-en); font-size: var(--fs-label); letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-meta); }
+  .cat-grid { display: grid; gap: var(--sp-5); grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+  .cat-dark { background: var(--hy-blue-night); padding: var(--sp-5); border-radius: var(--r-md); display: flex; flex-wrap: wrap; gap: var(--sp-4); align-items: center; }
+  .swatch { border: var(--bw) solid var(--c-border); border-radius: var(--r-md); overflow: hidden; }
+  .swatch__chip { height: 72px; }
+  .swatch__meta { padding: var(--sp-3); font-size: var(--fs-small); line-height: var(--lh-tight); }
+  .swatch__meta code { font-family: var(--font-en); font-size: var(--fs-label); color: var(--c-meta); display: block; }
+  .swatch__meta strong { color: var(--ink); }
+  .type-row { display: grid; grid-template-columns: 140px 1fr; gap: var(--sp-4); align-items: baseline; padding-block: var(--sp-4); border-top: var(--bw) solid var(--c-border); }
+  .type-row code { font-family: var(--font-en); font-size: var(--fs-label); color: var(--c-meta); }
+  .space-bar { height: 12px; background: var(--c-accent); border-radius: 2px; }
+  .motion-box { width: 56px; height: 56px; border-radius: var(--r-md); background: var(--c-accent); }
+  .motion-track { position: relative; height: 56px; flex: 1; min-width: 200px; background: var(--paper-alt); border-radius: var(--r-md); }
+  .motion-track .motion-box { position: absolute; left: 0; top: 0; transition: transform var(--dur-slow) var(--ease-out); }
+  .motion-track.is-go .motion-box { transform: translateX(calc(100% * 3)); }
+  .frame { border: var(--bw) solid var(--c-border); border-radius: var(--r-md); overflow: hidden; }
+  .photo-demo { position: relative; min-height: 460px; background: #0b1a33 url("../mockup/img/hero.png") center 60% / cover no-repeat; color: var(--on-dark); }
+  .photo-demo::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(6,31,58,0.55) 0%, rgba(6,31,58,0.15) 40%, rgba(6,31,58,0.65) 100%); }
+  .photo-demo > * { position: relative; }
+  .hero-demo { padding-block: var(--sp-8) var(--sp-7); }
+  .hero-title { font-family: var(--font-en); font-size: var(--fs-display); font-weight: var(--fw-bold); line-height: var(--lh-display); letter-spacing: var(--ls-en-disp); color: var(--on-dark-soft); margin: 0; }
+  .hero-title b { color: var(--on-dark); font-weight: inherit; }
+  .hero-title .line { display: block; }
+  .hero-sub { margin-top: var(--sp-5); color: var(--on-dark-soft); font-size: var(--fs-lead); max-width: 34rem; }
+  .hero-since { font-family: var(--font-en); font-size: var(--fs-label); letter-spacing: var(--ls-label); text-transform: uppercase; color: var(--on-dark-soft); margin-bottom: var(--sp-5); }
+  .hero-demo .btn { margin-top: var(--sp-6); }
+  .js .hero-title .line { animation: line-in var(--dur-slow) var(--ease-out) both; }
+  .js .hero-title .line:nth-child(2) { animation-delay: calc(var(--stagger) * 1); }
+  .js .hero-title .line:nth-child(3) { animation-delay: calc(var(--stagger) * 2); }
+  @keyframes line-in { from { opacity: 0; transform: translateY(0.3em); } }
+  @media (max-width: 767px) { .cat-row__k { width: 100%; } .type-row { grid-template-columns: 1fr; gap: var(--sp-1); } }
+</style>
+</head>
+<body>
+
+<!-- 아이콘: 직접 그린 SVG, 선 굵기 1.75 통일 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+  <symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5.5M12 16.5h.01"/></symbol>
+  <symbol id="i-check-c" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 2.8 2.8L16 10"/></symbol>
+  <symbol id="i-chev" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-board" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 9h16M9 9v11"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19h16M7 15l4-4 3 3 5-6"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 5h14v10H9l-4 4z"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3.5" y="5.5" width="17" height="13" rx="2"/><path d="m4 7 8 6 8-6"/></symbol>
+  <symbol id="i-insta" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.6"/><path d="M16.8 7.2h.01"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13.5 6.5 5h11l2.5 8.5V19H4z"/><path d="M4 13.5h4.5l1.5 2.5h4l1.5-2.5H20"/></symbol>
+  <symbol id="i-tick" viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></symbol>
+</svg>
+
+<!-- 하위 페이지용 기본 헤더 -->
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="#"><span class="brand__mark">HYFE</span><span class="brand__name">한양금융공학회</span></a>
+    <nav class="nav" aria-label="주 메뉴">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="#">Home</a></li>
+        <li><a class="nav__link" href="#">About</a></li>
+        <li><a class="nav__link" href="#" aria-current="page">Reports</a></li>
+        <li><a class="nav__link" href="#">Recruiting</a></li>
+        <li><a class="nav__link" href="#">Member</a></li>
+      </ul>
+      <div class="nav__auth">
+        <a class="btn btn--text btn--s" href="#"><span class="btn__label">LOGIN</span></a>
+        <a class="btn btn--primary btn--s" href="#">JOIN</a>
+      </div>
+    </nav>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>MENU <svg class="icon"><use href="#i-menu"/></svg></button>
+  </div>
+</header>
+
+<!-- 모바일 전체 화면 메뉴 -->
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="menu__layer"></div><div class="menu__layer"></div>
+  <div class="menu__panel" role="dialog" aria-modal="true" aria-label="전체 메뉴">
+    <div class="menu__top">
+      <a class="brand" href="#" style="color:var(--on-dark)"><span class="brand__mark">HYFE</span></a>
+      <button class="menu-toggle" type="button" style="display:inline-flex;color:var(--on-dark)" data-menu-close>CLOSE <svg class="icon"><use href="#i-x"/></svg></button>
+    </div>
+    <ul class="menu__list">
+      <li><a href="#">Home <small>홈</small></a></li>
+      <li><a href="#">About <small>학회 소개</small></a></li>
+      <li><a href="#">Reports <small>리포트</small></a></li>
+      <li><a href="#">Recruiting <small>모집</small></a></li>
+      <li><a href="#">Member <small>회원</small></a></li>
+    </ul>
+    <div class="menu__auth">
+      <a class="btn btn--on-dark btn--secondary btn--l" href="#">LOGIN</a>
+      <a class="btn btn--on-dark btn--primary btn--l" href="#">JOIN</a>
+    </div>
+  </div>
+</div>
+
+<main>
+  <div class="container cat-intro">
+    <nav class="breadcrumb" aria-label="현재 위치"><ol><li><a href="#">Home</a></li><li><a href="#">Design System</a></li><li aria-current="page">Components v2</li></ol></nav>
+    <h1 class="page-title" style="margin-top:var(--sp-3)">HYFE 토큰 · 컴포넌트 v2</h1>
+    <p>모든 페이지는 이 화면에 있는 값과 부품만 쓴다. 새 부품이 필요하면 여기에 먼저 추가하고 버전을 올린다. 표·카드의 리포트 제목과 이름은 <strong>배치 확인용 예시</strong>이며 사이트에 그대로 올리지 않는다.</p>
+    <ul class="cat-toc">
+      <li><a href="#t-color">색</a></li><li><a href="#t-type">글꼴</a></li><li><a href="#t-space">간격·모서리·그림자</a></li><li><a href="#t-motion">움직임</a></li>
+      <li><a href="#c-head">헤더·히어로</a></li><li><a href="#c-label">섹션 제목</a></li><li><a href="#c-btn">Button</a></li><li><a href="#c-input">Input</a></li>
+      <li><a href="#c-check">Checkbox</a></li><li><a href="#c-tab">Tab</a></li><li><a href="#c-table">Table</a></li><li><a href="#c-card">Report Card</a></li>
+      <li><a href="#c-stat">Stat</a></li><li><a href="#c-acc">Accordion</a></li><li><a href="#c-badge">Badge</a></li><li><a href="#c-misc">Breadcrumb·Pagination</a></li>
+      <li><a href="#c-empty">빈 상태</a></li><li><a href="#c-feedback">Toast·로딩</a></li><li><a href="#c-foot">Footer</a></li>
+    </ul>
+  </div>
+
+  <!-- ===== TOKENS ===== -->
+  <section class="container cat-block" id="t-color">
+    <h2>색</h2>
+    <p class="cat-note">한양블루는 라벨·강조·버튼에만, 넓은 면에는 deep·night만. 오렌지는 "모집 중" 배지 하나. <code>ink-faint</code>는 3.3:1이라 읽는 글자에 쓰지 않고, 메타·placeholder는 <code>ink-muted</code>(4.9:1).</p>
+    <div class="cat-grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,160px),1fr))">
+      <div class="swatch"><div class="swatch__chip" style="background:var(--hy-blue)"></div><div class="swatch__meta"><strong>hy-blue</strong><code>#0E4A84 · 메인</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--hy-blue-hover)"></div><div class="swatch__meta"><strong>hy-blue-hover</strong><code>#0C4176 · 호버</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--hy-blue-deep)"></div><div class="swatch__meta"><strong>hy-blue-deep</strong><code>#0A3866 · 눌림·띠</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--hy-blue-night)"></div><div class="swatch__meta"><strong>hy-blue-night</strong><code>#061F3A · 푸터</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--hy-blue-tint)"></div><div class="swatch__meta"><strong>hy-blue-tint</strong><code>#E8EEF5 · 표 머리</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--hy-orange)"></div><div class="swatch__meta"><strong>hy-orange</strong><code>#F7931E · 모집 중</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--ink)"></div><div class="swatch__meta"><strong>ink</strong><code>#14161A · 제목</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--ink-soft)"></div><div class="swatch__meta"><strong>ink-soft</strong><code>#4A4F57 · 본문</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--ink-muted)"></div><div class="swatch__meta"><strong>ink-muted</strong><code>#6B7079 · 메타</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--ink-faint)"></div><div class="swatch__meta"><strong>ink-faint</strong><code>#8A8F98 · 비활성</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--rule)"></div><div class="swatch__meta"><strong>rule</strong><code>#E4E6EA · 구분선</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--paper-alt)"></div><div class="swatch__meta"><strong>paper-alt</strong><code>#F6F7F9 · 교차 배경</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--danger)"></div><div class="swatch__meta"><strong>danger</strong><code>#B42318 · 오류</code></div></div>
+      <div class="swatch"><div class="swatch__chip" style="background:var(--success)"></div><div class="swatch__meta"><strong>success</strong><code>#1F7A4D · 완료</code></div></div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="t-type">
+    <h2>글꼴</h2>
+    <p class="cat-note">한글 Pretendard Variable, 영문 표시용 Figtree(히어로 제목·라벨·숫자·메뉴). 한글 제목 자간 -0.028em, 줄바꿈은 단어 단위(keep-all).</p>
+    <div class="type-row"><code>display · en</code><div style="font-family:var(--font-en);font-size:var(--fs-display);font-weight:700;line-height:var(--lh-display);letter-spacing:var(--ls-en-disp);color:var(--ink)">Since 2007</div></div>
+    <div class="type-row"><code>h1</code><h1 class="page-title">4개 팀으로 금융 전반을 다룹니다</h1></div>
+    <div class="type-row"><code>h2</code><h2 style="font-size:var(--fs-h2)">리서치 · IBD · 파생상품 · 퀀트</h2></div>
+    <div class="type-row"><code>h3</code><h3 style="font-size:var(--fs-h3)">교육에서 프로젝트까지 3단계</h3></div>
+    <div class="type-row"><code>lead</code><p style="font-size:var(--fs-lead)">기업분석부터 IB 딜, 파생상품 프라이싱, 퀀트 모델링까지 팀마다 교육(Lv1) → 실습(Lv2) → 프로젝트(Lv3)로 운영합니다.</p></div>
+    <div class="type-row"><code>body</code><p>매주 월·목 19:00~22:00 정규 세션을 열고, 팀 연합 스터디와 OB 초청 강연, 타 학회 학술 교류를 함께 진행합니다.</p></div>
+    <div class="type-row"><code>small · meta</code><p style="font-size:var(--fs-small);color:var(--c-meta)">리서치팀 · 2026.10.24 · 조회 128</p></div>
+    <div class="type-row"><code>label · en</code><p class="section-head__label">Research Tracks</p></div>
+  </section>
+
+  <section class="container cat-block" id="t-space">
+    <h2>간격 · 모서리 · 그림자</h2>
+    <p class="cat-note">4px 단위 10단계. 좌우 여백은 모든 섹션이 <code>--gutter</code> 하나(16~40px). 모서리는 2 · 4 · 8 · 원형 네 가지뿐.</p>
+    <div style="display:grid;gap:var(--sp-2);max-width:520px">
+      <div class="cat-row" style="padding:0"><span class="cat-row__k">sp-2 · 8</span><div class="space-bar" style="width:8px"></div></div>
+      <div class="cat-row" style="padding:0;border:0"><span class="cat-row__k">sp-4 · 16</span><div class="space-bar" style="width:16px"></div></div>
+      <div class="cat-row" style="padding:0;border:0"><span class="cat-row__k">sp-5 · 24</span><div class="space-bar" style="width:24px"></div></div>
+      <div class="cat-row" style="padding:0;border:0"><span class="cat-row__k">sp-7 · 48</span><div class="space-bar" style="width:48px"></div></div>
+      <div class="cat-row" style="padding:0;border:0"><span class="cat-row__k">sp-8 · 64</span><div class="space-bar" style="width:64px"></div></div>
+      <div class="cat-row" style="padding:0;border:0"><span class="cat-row__k">sp-10 · 128</span><div class="space-bar" style="width:128px"></div></div>
+    </div>
+    <div class="cat-row" style="margin-top:var(--sp-5)">
+      <span class="cat-row__k">radius</span>
+      <div style="width:64px;height:64px;background:var(--c-accent-soft);border:1px solid var(--hy-blue-tint-2);border-radius:var(--r-xs)"></div>
+      <div style="width:64px;height:64px;background:var(--c-accent-soft);border:1px solid var(--hy-blue-tint-2);border-radius:var(--r-sm)"></div>
+      <div style="width:64px;height:64px;background:var(--c-accent-soft);border:1px solid var(--hy-blue-tint-2);border-radius:var(--r-md)"></div>
+      <div style="width:96px;height:32px;background:var(--c-accent-soft);border:1px solid var(--hy-blue-tint-2);border-radius:var(--r-pill)"></div>
+    </div>
+    <div class="cat-row">
+      <span class="cat-row__k">shadow</span>
+      <div style="width:120px;height:72px;background:var(--paper);border-radius:var(--r-md);box-shadow:var(--sh-1);display:grid;place-items:center;padding:var(--sp-3);text-align:center;font-size:var(--fs-small)">sh-1</div>
+      <div style="width:120px;height:72px;background:var(--paper);border-radius:var(--r-md);box-shadow:var(--sh-2);display:grid;place-items:center;padding:var(--sp-3);text-align:center;font-size:var(--fs-small)">sh-2 호버</div>
+      <div style="width:120px;height:72px;background:var(--paper);border-radius:var(--r-md);box-shadow:var(--sh-3);display:grid;place-items:center;padding:var(--sp-3);text-align:center;font-size:var(--fs-small)">sh-3 떠있음</div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="t-motion">
+    <h2>움직임</h2>
+    <p class="cat-note">들어올 때 ease-out(지수형), 나갈 때 ease-in, 아코디언·체크는 ease-in-out, 로딩은 linear. 시간은 200 · 300 · 400ms 세 가지. 움직임 줄이기 설정이면 전부 0.</p>
+    <div class="cat-row">
+      <span class="cat-row__k">ease-out 400</span>
+      <div class="motion-track" id="motionTrack"><div class="motion-box"></div></div>
+      <button class="btn btn--secondary btn--s" type="button" id="motionBtn">재생</button>
+    </div>
+  </section>
+
+  <!-- ===== COMPONENTS ===== -->
+  <section class="container cat-block" id="c-head">
+    <h2>헤더 · 히어로 · 회원 바로가기 줄</h2>
+    <p class="cat-note">사진 위 헤더는 흰 로고·흰 메뉴(<code>.site-header--on-photo</code>), 스크롤하면 흰 배경. 제목의 H·Y·F·E만 흰색 100%, 나머지는 흰색 72%(15번 규칙). 회원 바로가기 줄은 로그인했을 때만. 1024px 아래에서는 MENU 버튼 → 3겹 전체 화면 메뉴.</p>
+    <div class="frame">
+      <div class="member-bar">
+        <div class="container member-bar__inner">
+          <span class="member-bar__hello"><strong>김한양</strong>님, 리서치팀 · 39기</span>
+          <ul class="member-bar__links">
+            <li><a href="#"><svg class="icon"><use href="#i-board"/></svg>팀 게시판</a></li>
+            <li><a href="#"><svg class="icon"><use href="#i-chart"/></svg>시황</a></li>
+            <li><a href="#"><svg class="icon"><use href="#i-chat"/></svg>면접 후기</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="photo-demo">
+        <header class="site-header site-header--on-photo" style="position:relative">
+          <div class="container site-header__inner">
+            <a class="brand" href="#"><span class="brand__mark">HYFE</span><span class="brand__name">한양금융공학회</span></a>
+            <nav class="nav" aria-label="주 메뉴 (예시)">
+              <ul class="nav__list">
+                <li><a class="nav__link" href="#" aria-current="page">Home</a></li><li><a class="nav__link" href="#">About</a></li>
+                <li><a class="nav__link" href="#">Reports</a></li><li><a class="nav__link" href="#">Recruiting</a></li><li><a class="nav__link" href="#">Member</a></li>
+              </ul>
+              <div class="nav__auth">
+                <a class="btn btn--on-dark btn--text btn--s" href="#"><span class="btn__label">LOGIN</span></a>
+                <a class="btn btn--on-dark btn--secondary btn--s" href="#">JOIN</a>
+              </div>
+            </nav>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="menu" data-menu-open>MENU <svg class="icon"><use href="#i-menu"/></svg></button>
+          </div>
+        </header>
+        <div class="container hero-demo">
+          <p class="hero-since">Since 2007</p>
+          <h2 class="hero-title" aria-label="HanYang Financial Engineering">
+            <span class="line"><b>H</b>an<b>Y</b>ang</span>
+            <span class="line"><b>F</b>inancial</span>
+            <span class="line"><b>E</b>ngineering</span>
+          </h2>
+          <p class="hero-sub">리서치 · IBD · 파생상품 · 퀀트, 4개 팀이 금융 전반을 다루는 한양대학교 금융공학회</p>
+          <a class="btn btn--on-dark btn--primary btn--l" href="#">팀·커리큘럼 보기 <svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-label">
+    <h2>Section Label + Title</h2>
+    <p class="cat-note">작은 영문 대문자 라벨(13px · 자간 0.2em · 한양블루) + 큰 한글 제목 + 선택 소개 문단. 어두운 배경용 <code>--on-dark</code>.</p>
+    <div class="section-head" style="margin-bottom:var(--sp-6)">
+      <p class="section-head__label">Our Teams</p>
+      <h3 class="section-head__title">4개 팀, 3단계 커리큘럼</h3>
+      <p class="section-head__lead">팀마다 교육(Lv1) → 실습(Lv2) → 프로젝트(Lv3)를 거쳐 결과물을 냅니다.</p>
+    </div>
+    <div class="cat-dark" style="display:block">
+      <div class="section-head section-head--on-dark" style="margin:0">
+        <p class="section-head__label">Recruiting</p>
+        <h3 class="section-head__title">39기 학회원을 모집합니다</h3>
+      </div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-btn">
+    <h2>Button</h2>
+    <p class="cat-note">Type 3 × Size 3 × State 5 × Icon 3. 높이 44 · 48 · 56px(모두 터치 44px 이상). 버튼 문구는 "동사 + 목적어".</p>
+    <div class="cat-row"><span class="cat-row__k">Primary</span>
+      <a class="btn btn--primary btn--s" href="#">지원서 받기</a>
+      <a class="btn btn--primary" href="#">지원서 받기</a>
+      <a class="btn btn--primary btn--l" href="#">지원서 받기</a>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Secondary</span>
+      <a class="btn btn--secondary btn--s" href="#">안내자료 받기</a>
+      <a class="btn btn--secondary" href="#">안내자료 받기</a>
+      <a class="btn btn--secondary btn--l" href="#">안내자료 받기</a>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Text 화살표</span>
+      <a class="btn btn--text" href="#"><span class="btn__label">More Research</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn--text btn--s" href="#"><span class="btn__label">커리큘럼 보기</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Icon</span>
+      <button class="btn btn--primary" type="button"><svg class="icon btn__icon"><use href="#i-download"/></svg>지원서 받기</button>
+      <button class="btn btn--secondary" type="button">팀·커리큘럼 보기<svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></button>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">State</span>
+      <button class="btn btn--primary" type="button">Default</button>
+      <button class="btn btn--primary" type="button" style="background:var(--c-accent-press);transform:translateY(1px)">Pressed</button>
+      <button class="btn btn--primary" type="button" disabled>Disabled</button>
+      <button class="btn btn--primary is-loading" type="button" aria-busy="true">로그인</button>
+      <button class="btn btn--secondary is-loading" type="button" aria-busy="true">저장</button>
+      <button class="btn btn--primary" type="button" id="loadingDemo">눌러서 로딩 보기</button>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">On dark</span>
+      <div class="cat-dark">
+        <a class="btn btn--on-dark btn--primary" href="#">JOIN US</a>
+        <a class="btn btn--on-dark btn--secondary" href="#">모집 일정 보기</a>
+        <a class="btn btn--on-dark btn--text" href="#"><span class="btn__label">FAQ</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-input">
+    <h2>Input Field</h2>
+    <p class="cat-note">State 5가지 + 라벨 + 도움말. 오류 문구는 "무엇이 문제인지 + 어떻게 고치는지". 검색칸은 앞 아이콘, 비밀번호칸은 보기 버튼.</p>
+    <div class="cat-grid">
+      <div class="field"><label class="field__label" for="f1">아이디</label><div class="field__wrap"><input class="field__control" id="f1" placeholder="영문·숫자 4~16자"></div><p class="field__helper">Default · 가입 후 바꿀 수 없습니다</p></div>
+      <div class="field"><label class="field__label" for="f2">아이디</label><div class="field__wrap"><input class="field__control" id="f2" placeholder="영문·숫자 4~16자" style="border-color:var(--c-accent);outline:1px solid var(--c-accent);outline-offset:-2px"></div><p class="field__helper">Focus</p></div>
+      <div class="field is-filled"><label class="field__label" for="f3">이름</label><div class="field__wrap"><input class="field__control" id="f3" value="김한양"></div><p class="field__helper">Filled</p></div>
+      <div class="field is-error"><label class="field__label" for="f4">비밀번호 확인<span class="req" aria-hidden="true">*</span></label><div class="field__wrap"><input class="field__control" id="f4" type="password" value="hyfe2026" aria-invalid="true" aria-describedby="f4h"></div><p class="field__helper" id="f4h"><svg class="icon" style="width:1rem;height:1rem;margin-top:2px"><use href="#i-alert"/></svg>위에 입력한 비밀번호와 다릅니다. 다시 입력해 주세요.</p></div>
+      <div class="field is-disabled"><label class="field__label" for="f5">학번</label><div class="field__wrap"><input class="field__control" id="f5" value="관리자 승인 후 입력" disabled></div><p class="field__helper">Disabled</p></div>
+      <div class="field"><label class="field__label" for="f6">비밀번호</label><div class="field__wrap field__wrap--trail"><input class="field__control" id="f6" type="password" value="hyfe2026"><button class="field__trail-btn" type="button" aria-label="비밀번호 보기" data-pw-toggle="f6"><svg class="icon"><use href="#i-eye"/></svg></button></div><p class="field__helper">8자 이상, 영문·숫자 포함</p></div>
+      <div class="field"><label class="field__label sr-only" for="f7">레포트 검색</label><div class="field__wrap field__wrap--icon"><svg class="icon field__lead-icon"><use href="#i-search"/></svg><input class="field__control" id="f7" type="search" placeholder="제목·기업명·작성자 검색"></div></div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-check">
+    <h2>Checkbox</h2>
+    <p class="cat-note">체크 선이 그려진다(300ms ease-in-out). 박스는 20px, 누르는 영역은 줄 전체 44px.</p>
+    <div class="cat-row">
+      <label class="check"><input type="checkbox"><span class="check__box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>로그인 상태 유지</label>
+      <label class="check"><input type="checkbox" checked><span class="check__box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>Checked</label>
+      <label class="check"><input type="checkbox" disabled><span class="check__box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span>Disabled</label>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-tab">
+    <h2>Tab</h2>
+    <p class="cat-note">레포트 분류(<code>?category=</code>)는 밑줄 탭, 모바일에서는 옆으로 밀기. 연혁 기간(<code>?period=</code>)처럼 4개 이하면 세그먼트. 둘 다 링크라 새로고침·공유해도 같은 탭이 열린다.</p>
+    <nav class="tabs" aria-label="레포트 분류">
+      <ul class="tabs__list" data-tabs>
+        <li><a class="tabs__item" href="#" aria-current="page">전체<span class="tabs__count">24</span></a></li>
+        <li><a class="tabs__item" href="#">Market</a></li><li><a class="tabs__item" href="#">Corporate</a></li><li><a class="tabs__item" href="#">Industry</a></li>
+        <li><a class="tabs__item" href="#">Session</a></li><li><a class="tabs__item" href="#">Quant</a></li><li><a class="tabs__item" href="#">Portfolio</a></li>
+      </ul>
+    </nav>
+    <div style="margin-top:var(--sp-6)">
+      <nav class="segment" aria-label="연혁 기간" data-tabs>
+        <a class="segment__item" href="#" aria-current="page">최근</a><a class="segment__item" href="#">2021–2023</a><a class="segment__item" href="#">2018–2020</a><a class="segment__item" href="#">Archive</a>
+      </nav>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-table">
+    <h2>Table Row</h2>
+    <p class="cat-note">No · 분류 · 제목 · 작성자 · 발행일 · 조회수 · 자료. 숫자는 고정폭(tabular). 768px 아래에서는 한 줄 카드로 바뀐다(창을 줄여 확인).</p>
+    <div class="table-wrap">
+      <table class="table table--stack">
+        <thead><tr><th class="col-num" scope="col">No</th><th scope="col">분류</th><th scope="col">제목</th><th scope="col">작성자</th><th scope="col">발행일</th><th class="col-views" scope="col">조회수</th><th class="col-file" scope="col">자료</th></tr></thead>
+        <tbody>
+          <tr><td class="col-num">24</td><td class="col-cat"><span class="badge badge--tag">Corporate</span></td><td class="col-title"><a class="table__title" href="#">(예시) 전력기기 업황과 수주잔고 점검</a></td>
+            <td class="col-author">리서치팀</td><td class="col-date">2026.10.24</td><td class="col-views">128</td>
+            <td class="col-file"><a class="file-btn" href="#" aria-label="PDF 받기"><svg class="icon"><use href="#i-download"/></svg></a></td></tr>
+          <tr><td class="col-num">23</td><td class="col-cat"><span class="badge badge--tag">Quant</span></td><td class="col-title"><a class="table__title" href="#">(예시) 모멘텀 팩터의 한국시장 적용</a></td>
+            <td class="col-author">퀀트팀</td><td class="col-date">2026.10.17</td><td class="col-views">96</td>
+            <td class="col-file"><a class="file-btn" href="#" aria-label="PDF 받기"><svg class="icon"><use href="#i-download"/></svg></a></td></tr>
+          <tr><td class="col-num">22</td><td class="col-cat"><span class="badge badge--tag">Market</span></td><td class="col-title"><a class="table__title" href="#">(예시) 10월 3주차 시황 정리</a></td>
+            <td class="col-author">파생상품팀</td><td class="col-date">2026.10.13</td><td class="col-views">1,204</td>
+            <td class="col-file"><span class="file-btn" style="color:var(--ink-muted)" aria-label="자료 없음">–</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-card">
+    <h2>Report Card</h2>
+    <p class="cat-note">윗줄 팀 · 학기 → 기업명 → 제목 → 아랫줄 날짜 · PDF(v2에서 팀을 윗줄로 옮김). 카드 전체가 링크, PDF 버튼은 따로 눌린다. 호버 시 2px 상승.</p>
+    <div class="report-grid">
+      <article class="report-card"><div class="report-card__top"><span class="badge badge--team">Research</span><span class="report-card__term">26-2</span></div>
+        <p class="report-card__company">(예시) 기업 A</p>
+        <h3 class="report-card__title"><a href="#">전력기기 업황과 수주잔고 점검</a></h3>
+        <div class="report-card__foot"><span class="num">2026.10.24</span><a class="report-card__pdf" href="#"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+      <article class="report-card"><div class="report-card__top"><span class="badge badge--team">IBD</span><span class="report-card__term">26-2</span></div>
+        <p class="report-card__company">(예시) 딜 B</p>
+        <h3 class="report-card__title"><a href="#">LBO 사례로 본 인수금융 구조</a></h3>
+        <div class="report-card__foot"><span class="num">2026.10.10</span><a class="report-card__pdf" href="#"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+      <article class="report-card"><div class="report-card__top"><span class="badge badge--team">Derivatives</span><span class="report-card__term">26-1</span></div>
+        <p class="report-card__company">(예시) FICC</p>
+        <h3 class="report-card__title"><a href="#">금리 스왑 헤지 피치북</a></h3>
+        <div class="report-card__foot"><span class="num">2026.06.02</span><a class="report-card__pdf" href="#"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+      <article class="report-card"><div class="report-card__top"><span class="badge badge--team">Quant</span><span class="report-card__term">26-1</span></div>
+        <p class="report-card__company">(예시) KOSPI</p>
+        <h3 class="report-card__title"><a href="#">저변동성 포트폴리오 백테스트</a></h3>
+        <div class="report-card__foot"><span class="num">2026.05.21</span><a class="report-card__pdf" href="#"><svg class="icon"><use href="#i-file"/></svg>PDF</a></div></article>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-stat">
+    <h2>Stat Number</h2>
+    <p class="cat-note">홍보자료 근거가 있는 숫자 4개만. 카운트업은 화면에 들어올 때 한 번. 스크립트가 없어도 최종 숫자가 먼저 보인다.</p>
+    <div class="stats">
+      <div class="stat"><span class="stat__value"><span data-count="2007">2007</span></span><span class="stat__label">Founded</span></div>
+      <div class="stat"><span class="stat__value"><span data-count="4">4</span><span class="stat__unit">개 팀</span></span><span class="stat__label">Teams</span></div>
+      <div class="stat"><span class="stat__value">40–50<span class="stat__unit">명</span></span><span class="stat__label">Members / Term</span></div>
+      <div class="stat"><span class="stat__value"><span data-count="450">450</span><span class="stat__unit">여 명</span></span><span class="stat__label">Alumni</span></div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-acc">
+    <h2>Accordion</h2>
+    <p class="cat-note"><code>&lt;details&gt;</code> 기반이라 스크립트 없이도 열린다. 높이 변화와 화살표 회전은 300ms ease-in-out.</p>
+    <div class="accordion">
+      <details class="accordion__item" open><summary class="accordion__q"><span class="accordion__q-mark">Q</span><span class="accordion__q-text">전공이나 학년 제한이 있나요?</span><svg class="icon accordion__chev"><use href="#i-chev"/></svg></summary>
+        <div class="accordion__a">금융권에 관심 있는 한양대생이라면 전공·학년·학번과 관계없이 지원할 수 있습니다. 다만 두 학기 이상 같은 팀에서 활동할 수 있어야 합니다.</div></details>
+      <details class="accordion__item"><summary class="accordion__q"><span class="accordion__q-mark">Q</span><span class="accordion__q-text">면접은 어떻게 진행되나요?</span><svg class="icon accordion__chev"><use href="#i-chev"/></svg></summary>
+        <div class="accordion__a">대면 면접으로 1차 인적성, 2차 팀별 금융 지식을 봅니다. 리서치팀은 스탁피치를 기반으로 진행합니다.</div></details>
+      <details class="accordion__item"><summary class="accordion__q"><span class="accordion__q-mark">Q</span><span class="accordion__q-text">정규 세션은 언제 하나요?</span><svg class="icon accordion__chev"><use href="#i-chev"/></svg></summary>
+        <div class="accordion__a">매주 월요일과 목요일 19:00~22:00에 진행합니다.</div></details>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-badge">
+    <h2>Badge</h2>
+    <p class="cat-note">모집 상태 3가지(오렌지는 "모집 중"에만), 레포트 분류 태그, 팀 태그. 팀마다 색을 따로 쓰지 않는다.</p>
+    <div class="cat-row"><span class="cat-row__k">Recruiting</span>
+      <span class="badge badge--open"><span class="badge__dot"></span>모집 중</span>
+      <span class="badge badge--soon">모집 예정</span>
+      <span class="badge badge--closed">모집 마감</span>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Category</span>
+      <span class="badge badge--tag">Market</span><span class="badge badge--tag">Corporate</span><span class="badge badge--tag">Quant</span>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Team</span>
+      <span class="badge badge--team">Research</span><span class="badge badge--team">IBD</span><span class="badge badge--team">Derivatives</span><span class="badge badge--team">Quant</span>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-misc">
+    <h2>Breadcrumb · Pagination</h2>
+    <p class="cat-note">브레드크럼은 모든 하위 페이지 제목 위. 페이지 번호는 44px 정사각형, 현재 페이지만 한양블루.</p>
+    <div class="cat-row"><span class="cat-row__k">Breadcrumb</span>
+      <nav class="breadcrumb" aria-label="현재 위치"><ol><li><a href="#">Home</a></li><li><a href="#">About</a></li><li aria-current="page">Curriculum</li></ol></nav>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Pagination</span>
+      <nav class="pagination" aria-label="페이지"><ol>
+        <li><span aria-disabled="true" aria-label="이전 페이지"><svg class="icon" style="transform:rotate(90deg)"><use href="#i-chev"/></svg></span></li>
+        <li><a href="#" aria-current="page">1</a></li><li><a href="#">2</a></li><li><a href="#">3</a></li><li><span>…</span></li><li><a href="#">8</a></li>
+        <li><a href="#" aria-label="다음 페이지"><svg class="icon" style="transform:rotate(-90deg)"><use href="#i-chev"/></svg></a></li>
+      </ol></nav>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-empty">
+    <h2>빈 상태</h2>
+    <p class="cat-note">지금 사이트 레포트가 0개라 홈 최신 리포트와 /reports 둘 다 이 화면이 먼저 보인다. 문구는 학습노트 7-3 "아직 정할 것"이라 임시안.</p>
+    <div class="cat-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
+      <div class="empty">
+        <svg class="icon empty__icon"><use href="#i-inbox"/></svg>
+        <h3 class="empty__title">리포트를 옮겨오는 중입니다</h3>
+        <p class="empty__desc">지금까지의 리포트는 네이버 카페에 있습니다. 팀별 결과물을 이곳으로 차례로 옮기고 있습니다.</p>
+        <div class="empty__actions"><a class="btn btn--secondary btn--s" href="https://cafe.naver.com/hanyangfe">카페에서 보기</a><a class="btn btn--text btn--s" href="#"><span class="btn__label">커리큘럼 보기</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a></div>
+      </div>
+      <div class="empty">
+        <svg class="icon empty__icon"><use href="#i-search"/></svg>
+        <h3 class="empty__title">'옵션 프라이싱' 검색 결과가 없습니다</h3>
+        <p class="empty__desc">다른 단어로 검색하거나 분류를 '전체'로 바꿔 보세요.</p>
+        <div class="empty__actions"><a class="btn btn--secondary btn--s" href="#">검색 초기화</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="container cat-block" id="c-feedback">
+    <h2>Toast · 로딩</h2>
+    <p class="cat-note">토스트는 화면 아래 가운데에서 제자리 페이드(들어올 때 300ms ease-out, 나갈 때 200ms ease-in), 4초 뒤 사라짐. 로딩은 0.8초 일정 속도 회전.</p>
+    <div class="cat-row"><span class="cat-row__k">Toast</span>
+      <button class="btn btn--secondary btn--s" type="button" data-toast="success">가입 신청 완료 띄우기</button>
+      <button class="btn btn--secondary btn--s" type="button" data-toast="error">로그인 오류 띄우기</button>
+    </div>
+    <div class="cat-row"><span class="cat-row__k">Spinner</span>
+      <div class="spinner" role="status" aria-label="불러오는 중"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer" id="c-foot">
+  <div class="container">
+    <div class="site-footer__top">
+      <div><a class="brand" href="#"><span class="brand__mark">HYFE</span><span class="brand__name">한양금융공학회</span></a>
+        <p style="margin-top:var(--sp-3)">Since 2007 · HanYang Financial Engineering</p></div>
+      <div class="site-footer__contact">
+        <a href="mailto:hanyanghyfe@naver.com"><svg class="icon"><use href="#i-mail"/></svg>hanyanghyfe@naver.com</a>
+        <a href="https://www.instagram.com/hanyang_hyfe/"><svg class="icon"><use href="#i-insta"/></svg>@hanyang_hyfe</a>
+      </div>
+    </div>
+    <p class="site-footer__bottom">© 2026 HYFE. All rights reserved.</p>
+  </div>
+</footer>
+
+<div class="toast-region" aria-live="polite" id="toasts"></div>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  // 모바일 메뉴
+  const menu = document.getElementById('menu');
+  const setMenu = (open) => {
+    menu.classList.toggle('is-open', open);
+    menu.setAttribute('aria-hidden', String(!open));
+    document.querySelectorAll('[data-menu-open]').forEach(b => b.setAttribute('aria-expanded', String(open)));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) menu.querySelector('[data-menu-close]').focus();
+  };
+  document.querySelectorAll('[data-menu-open]').forEach(b => b.addEventListener('click', () => setMenu(true)));
+  menu.querySelector('[data-menu-close]').addEventListener('click', () => setMenu(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && menu.classList.contains('is-open')) setMenu(false); });
+
+  // 탭 (카탈로그에서만 클릭으로 바꿔 보기. 사이트에서는 링크 이동)
+  document.querySelectorAll('[data-tabs]').forEach(group => {
+    group.addEventListener('click', e => {
+      const a = e.target.closest('a'); if (!a) return; e.preventDefault();
+      group.querySelectorAll('a').forEach(x => x.removeAttribute('aria-current'));
+      a.setAttribute('aria-current', 'page');
+    });
+  });
+
+  // 비밀번호 보기
+  document.querySelectorAll('[data-pw-toggle]').forEach(btn => btn.addEventListener('click', () => {
+    const input = document.getElementById(btn.dataset.pwToggle);
+    const show = input.type === 'password';
+    input.type = show ? 'text' : 'password';
+    btn.setAttribute('aria-label', show ? '비밀번호 숨기기' : '비밀번호 보기');
+  }));
+
+  // 로딩 버튼
+  const lb = document.getElementById('loadingDemo');
+  lb.addEventListener('click', () => { lb.classList.add('is-loading'); lb.setAttribute('aria-busy','true'); setTimeout(() => { lb.classList.remove('is-loading'); lb.removeAttribute('aria-busy'); }, 1800); });
+
+  // 움직임 데모
+  document.getElementById('motionBtn').addEventListener('click', () => document.getElementById('motionTrack').classList.toggle('is-go'));
+
+  // 토스트
+  const toastCopy = {
+    success: { icon: 'i-check-c', title: '가입 신청을 보냈습니다', msg: '임원진이 승인하면 로그인할 수 있습니다.' },
+    error:   { icon: 'i-alert',   title: '아이디 또는 비밀번호가 맞지 않습니다', msg: '대소문자를 확인하고 다시 입력해 주세요.' }
+  };
+  document.querySelectorAll('[data-toast]').forEach(b => b.addEventListener('click', () => {
+    const t = toastCopy[b.dataset.toast];
+    const el = document.createElement('div');
+    el.className = 'toast toast--' + b.dataset.toast;
+    el.setAttribute('role', b.dataset.toast === 'error' ? 'alert' : 'status');
+    el.innerHTML = `<svg class="icon toast__icon"><use href="#${t.icon}"/></svg><div><span class="toast__title">${t.title}</span><span class="toast__msg">${t.msg}</span></div>`;
+    document.getElementById('toasts').appendChild(el);
+    setTimeout(() => { el.classList.add('is-leaving'); el.addEventListener('animationend', () => el.remove(), { once: true }); }, 4000);
+  }));
+
+  // 숫자 카운트업: 최종값이 이미 보이는 상태에서 시작. 움직임 줄이기면 건너뜀
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => entries.forEach(en => {
+      if (!en.isIntersecting) return; io.unobserve(en.target);
+      const el = en.target, end = +el.dataset.count, start = end > 1000 ? end - 40 : 0, t0 = performance.now(), dur = 1200;
+      const step = now => { const p = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(2, -10 * p);
+        el.textContent = Math.round(start + (end - start) * (p === 1 ? 1 : e)); if (p < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    }), { threshold: 0.6 });
+    document.querySelectorAll('[data-count]').forEach(el => io.observe(el));
+  }
+</script>
+</body>
+</html>
