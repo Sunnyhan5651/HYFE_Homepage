@@ -1,0 +1,12 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      APP_BASE_URL: http://localhost:3000
+      AUTH_SECRET: local-demo-docker-secret
+      COOKIE_NAME: hyfe_demo_session
+      LOCAL_DB_PATH: /app/data/demo-db.json
+      LOCAL_PUBLIC_STORAGE: /app/storage/public
+      LOCAL_PRIVATE_STORAGE: /app/storage/private

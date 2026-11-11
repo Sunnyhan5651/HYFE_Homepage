@@ -1,0 +1,17 @@
+:root {
+  --hy-blue: #1d2475;
+  --hy-blue-dark: #111853;
+  --hy-blue-deep: #080d2b;
+  --hy-blue-soft: #e9ecff;
+  --hy-gray: #3f3d42;
+  --hy-silver: #939396;
+  --hy-gold: #ab863f;
+  --paper: #ffffff;
+  --muted: #f5f7fb;
+  --line: #e5e8f0;
+  --text: #111827;
+  --text-muted: #6b7280;
+  --danger: #b42318;
+  --success: #027a48;
+  --warning: #b54708;
+}
