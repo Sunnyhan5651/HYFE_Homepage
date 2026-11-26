@@ -7,26 +7,32 @@
 | 경로 | 내용 |
 |---|---|
 | `PRODUCT.md` | 누구를 위한 사이트인지, 내용 기준(26-2 홍보자료: 2007년 설립 · 4개 팀 · 알럼나이 450여 명), 지켜야 할 원칙 |
-| `DESIGN.md` | 디자인 규칙: 색(한양블루), 글꼴(Pretendard · Poppins · Figtree), 간격, 움직임 |
+| `DESIGN.md` | 디자인 규칙: 색(한양블루), 글꼴, 간격, 움직임 (시안은 현재 Times New Roman + 한글 명조 Noto Serif KR로 시험 중) |
 | `design-system/tokens.css` | 색·글꼴·간격 값(CSS 변수). **모든 화면은 이 값만 사용** |
 | `design-system/components.css` | 버튼·헤더·메뉴·카드·배지·빈 상태 등 공통 컴포넌트 |
 | `design-system/catalog.html` | 컴포넌트 모음 페이지 (브라우저로 열어서 확인) |
-| `mockup/home.html` | **홈 화면 시안** (브라우저로 열기) |
-| `mockup/img/` | 시안 사진: 본관(히어로) · 팀별 커리큘럼 4장 (AI 생성 이미지) |
+| `mockup/home.html` | **사이트 전체 시안 (11/27 최신, 내부 버전 v85)** — 한 파일 안에 모든 페이지. 브라우저로 열기 |
+| `mockup/img/` | 시안 사진: 페이지 머리 사진(코덱스 생성, 사람 없음) · 진출 기관 로고(`logos_clean/`) · 39기 임원진 사진(`members/`) · 팀 결과물(`works/`) |
 
 ## 시안 보는 법
 
-`mockup/home.html`을 브라우저로 열면 됩니다. 왼쪽 아래 **시안 상태** 패널로 로그인 상태 · 리포트 유무 · 모집 상태를 바꿔볼 수 있습니다(배포 시 삭제).
+`mockup/home.html`을 **PC 브라우저**(크롬 · 엣지)로 열면 됩니다. 왼쪽 아래 **시안 상태** 패널로 로그인 상태 · 관리자 계정 · 리포트 유무 · 모집 상태를 바꿔볼 수 있습니다(배포 시 삭제, 휴대폰 폭에서는 숨김).
 
-## 현재 상태 (2026-11-11)
+> 카카오톡 미리보기 등 스크립트가 꺼진 화면에서는 페이지 이동 · 명단 카드가 안 나옵니다. 휴대폰 확인은 웹 주소에 올린 뒤 링크로.
 
-- **홈:** 시안 진행 중(미확정). 내용 겹침 정리 예정
-  - 순서: HERO → OUR TEAMS → CURRICULUM(팀별 펼침 패널) → LATEST REPORTS → RECRUITING
-- **다른 페이지:** 아직 디자인하지 않음
-  - 대상: ABOUT · MEMBER · REPORTS · RECRUITING · 로그인 · 가입
-  - 시안에서 메뉴를 누르면 "준비 중" 화면과 들어갈 내용 목록이 보임
+## 현재 상태 (2026-11-27)
+
+- **모든 페이지 시안 완료(디자인 검토 중)** — 다 끝나면 한 번에 Next.js로 옮김
+  - 홈: HERO → OUR TEAMS → CURRICULUM → REPORTS → RECRUITING, 오른쪽 목차 · 한 화면씩 넘김
+  - About: Overview · History · Curriculum · Alumni (하위 탭)
+  - Member: 기수 탭(10개씩 넘김) · 임원진 · 학회원 카드
+  - Reports: 팀 탭(리서치 산업/기업, IBD IPO/M&A) · 검색 · 공개 범위(전체 / 학회원, 관리자 설정) · PDF 바로 저장
+  - Recruiting: 모집 일정 · 지원 방법(워드 지원서 바로 받기, PDF로 메일 제출, 메일 주소 복사) · 면접 절차 · 지원 자격 · FAQ
+  - Lounge(회원 전용): 일정표(전체 · 팀별 · Case Study 발표자) · 면접 후기 · Case Study (제목 / 내용 / 작성자 검색)
+  - 로그인 · 아이디 찾기 · 비밀번호 찾기, 내 정보 수정, 관리자 가입 승인
+- **백엔드와 맞출 것:** 아이디 · 비밀번호 찾기가 이메일 기준 → 회원가입에 이메일 칸 필요(Supabase Auth 재설정 메일)
 - **링크 주소:** 시안의 링크는 실제 사이트 주소를 그대로 씀
-  - 예: `/about`, `/recruiting`, `/reports/24`
+  - 예: `/about`, `/recruiting`, `/lounge/schedule`, `/reports/24`
   - `home.html` 맨 아래의 "페이지 이동 (시안 전용)" 스크립트만 지우면 Next.js 라우팅에 그대로 연결됨
 
 ## 지킬 것
