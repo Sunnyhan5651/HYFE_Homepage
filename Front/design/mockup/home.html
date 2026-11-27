@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HYFE 한양금융공학회</title>
-<meta name="description" content="2007년부터 파생상품 · 퀀트 · IBD · 리서치, 4개 팀으로 금융 전반을 다뤄 온 한양대학교 금융공학회.">
+<meta name="description" content="2007년부터 파생상품 · 퀀트 · IBD · 리서치 4개 팀으로 함께 공부해 온 한양대학교 금융공학회.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -16,7 +16,7 @@
   /* v75 (사용자): 글씨체 전체 Times New Roman. 한글은 Times에 없으므로 비슷한 명조 Noto Serif KR로 */
   :root { --font-ko: "Times New Roman", "Noto Serif KR", "Nanum Myeongjo", Batang, serif; --font-en: "Times New Roman", Times, "Noto Serif KR", serif; --font-display: "Times New Roman", Times, "Noto Serif KR", serif; }
   body, button, input, select, textarea { font-family: var(--font-ko); }
-  /* ===== 홈페이지 시안 v85 (v84 + 로그인 화면 · 아이디 찾기 · 비밀번호 찾기, 11/26) ===== */
+  /* ===== 홈페이지 시안 v90 (v89 + About 설립 제목 "From One Desk to Four", 11/27) ===== */
   /* 이전: 홈 v13 (v12 + 퀀트 문구: 선규 GitHub 수정 반영 · 파생 문구 교체, 11/26) */
   /* 이전: 홈 v12 (v11 + 커리큘럼 남색 배경·섹션 스크롤 멈춤 복원, 11/26) */
   /* 이전: 홈 v11 (v10 + IBD 사진 위치 중간값): 짧은 홈(4블록) + 메뉴는 각 페이지로 (토큰만 사용) ===== */
@@ -897,6 +897,19 @@
   .auth-result { padding: var(--sp-4); border-radius: var(--r-md); background: var(--c-accent-soft); color: var(--ink); text-align: center; font-size: var(--fs-small); line-height: 1.6; }
   .auth-result b { font-size: var(--fs-lead); color: var(--c-accent); }
   .auth-result[hidden], .field__helper[hidden] { display: none; }
+  /* v86 회원가입 */
+  body.is-signup #signupPage { display: block; }
+  body.is-signup #page { display: none !important; }
+  .auth-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+  .auth-inline { gap: var(--sp-2); }
+  .auth-inline .field__control { flex: 1; min-width: 0; }
+  .auth-check { flex: none; height: auto; align-self: stretch; padding-inline: var(--sp-4); }
+  .auth-agree { align-items: flex-start; line-height: 1.5; }
+  .auth-agree small { display: block; color: var(--c-meta); font-size: 0.75rem; }
+  .auth-agree-err { margin: calc(-1 * var(--sp-3)) 0 0; color: var(--danger); }
+  .field.is-ok .field__helper { color: var(--c-accent); }
+  .auth-card .field__label .req { display: inline; }
+  select.field__control { appearance: auto; }
   /* v84: 휴대폰에서는 시안 상태 패널이 본문을 가려서 숨김(PC에서만 상태 바꿔 보기) */
   @media (max-width: 767px) { .proto { display: none !important; } }
   /* v81 (사용자): About(Overview · History · Curriculum · Alumni) 섹션 제목도 전체 굵게 — 얇은 + 굵은 섞기 없이 */
@@ -1130,7 +1143,7 @@
         <span class="line" aria-hidden="true"><b>H</b><span class="rest">an</span><b>Y</b><span class="rest">ang</span> <b>F</b><span class="rest">inancial</span></span>
         <span class="line" aria-hidden="true"><b>E</b><span class="rest">ngineering</span></span>
       </h1>
-      <p class="hero__sub">2007년부터 <strong>파생상품 · 퀀트 · IBD · 리서치</strong>, 4개 팀으로 금융 전반을 다뤄 온 한양대학교 금융공학회입니다.</p>
+      <p class="hero__sub">2007년부터 <strong>파생상품 · 퀀트 · IBD · 리서치</strong>, 4개 팀으로 함께 공부해 온 한양대학교 금융공학회입니다.</p>
       <div class="hero__cta">
         <a class="btn btn--on-dark btn--primary btn--l" href="/curriculum">팀·커리큘럼 보기 <svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
       </div>
@@ -1192,7 +1205,7 @@
       <div class="reports__head">
         <div class="lead-col">
           <p class="label">Latest Reports</p>
-          <h2 class="statement" id="reportsTitle">말보다<br><strong>결과물</strong>로 보여줍니다</h2>
+          <h2 class="statement" id="reportsTitle"><strong>Reports</strong></h2>
         </div>
         <a class="btn btn--text" href="/reports"><span class="btn__label">More Reports</span><svg class="icon btn__icon btn__icon--trailing"><use href="#i-arrow"/></svg></a>
       </div>
@@ -1227,7 +1240,7 @@
     <div class="container recruit__inner">
       <div>
         <span class="badge badge--soon" id="recruitBadge">모집 예정</span>
-        <h2 class="statement statement--on-dark" id="recruitTitle"><span id="recruitGen">39</span>기, <strong>금융 전반</strong>을 함께 배울 사람을 찾습니다</h2>
+        <h2 class="statement statement--on-dark" id="recruitTitle"><span id="recruitGen">39</span>기, <strong>함께 성장할 사람</strong>을 모집합니다</h2>
       </div>
       <div class="recruit__actions">
         <a class="btn btn--on-dark btn--primary btn--l" href="/recruiting">Join Us</a>
@@ -1268,9 +1281,8 @@
   <section class="block" id="story" aria-labelledby="storyTitle">
     <div class="container story">
       <div class="story__text">
-        <p class="label">Our Story</p>
-        <h2 class="statement" id="storyTitle"><strong>파생상품</strong>에서 시작해<br>지금은 <strong>금융 전반</strong>을 다룹니다</h2>
-        <p>한양금융공학회는 2007년, 파생상품에 대한 관심을 학내의 깊이 있는 학습으로 이어 가기 위해 세워졌습니다. 지금은 파생상품 · 퀀트 · IBD · 리서치 4개 팀이 금융공학과 기업금융 전반을 공부합니다.</p>
+        <h2 class="statement story-since" id="storyTitle"><strong>From One Desk to Four</strong></h2>
+        <p>한양금융공학회는 2007년, 파생상품에 대한 관심을 학내의 깊이 있는 학습으로 이어 가기 위해 세워졌습니다. 파생상품 스터디로 시작해, 지금은 파생상품 · 퀀트 · IBD · 리서치 4개 팀이 금융공학과 기업금융을 공부합니다.</p>
         <p>금융 이슈에 대한 발표와 토론, 스터디로 기본을 다지고 이를 실제 문제에 적용하며 배웁니다. 졸업 후 금융권에 진출한 선배들과 네트워크를 이어 가며 함께 금융 인재를 키웁니다.</p>
         <div class="story__fields"><b>Where Members Go</b>국내외 증권사 · 은행 · 자산운용사 · 사모펀드 · 컨설팅펌 · 회계법인 · 대기업 · 로스쿨<a class="stat__link" href="/alumni">진출 기관 전체 보기<svg class="icon" aria-hidden="true"><use href="#i-arrow"/></svg></a></div>
       </div>
@@ -1913,6 +1925,38 @@
 </section>
 </div>
 
+<!-- 회원가입 (v86, 사용자: 이메일 칸 넣어서). 기존 기능 = 이름 · 아이디 · 비밀번호 · 비밀번호 확인 + 관리자 승인 후 가입.
+     추가: 이메일(아이디 · 비밀번호 찾기용), 입회 기수 · 팀(관리자 가입 승인 표에 쓰는 값), 개인정보 동의 -->
+<div id="signupPage" class="real-page">
+<section class="page-hero photo-section photo-section--dark auth-hero" id="signupHero" aria-labelledby="signupTitle">
+  <div class="container">
+    <ol class="crumb" aria-label="현재 위치"><li><a href="/">Home</a></li><li aria-current="page">Join</li></ol>
+    <h1 class="page-hero__title" id="signupTitle" tabindex="-1">Join</h1>
+  </div>
+</section>
+<section class="block auth" aria-label="회원가입">
+  <div class="container">
+    <form class="auth-card" id="signupForm" novalidate>
+      <p class="auth-lead">HYFE 학회원만 가입할 수 있습니다. 신청하면 관리자가 확인한 뒤 승인합니다.</p>
+      <div class="field" data-f="suName"><label class="field__label" for="suName">이름<span class="req" aria-hidden="true">*</span></label><div class="field__wrap"><input class="field__control" id="suName" type="text" placeholder="실명" autocomplete="name" required></div><p class="field__helper" data-help="" hidden></p></div>
+      <div class="auth-row">
+        <div class="field" data-f="suGen"><label class="field__label" for="suGen">입회 기수<span class="req" aria-hidden="true">*</span></label><div class="field__wrap"><select class="field__control" id="suGen"><option value="">선택</option><option value="39">39기</option><option value="38">38기</option><option value="37">37기</option><option value="36">36기</option><option value="35">35기</option><option value="34">34기</option><option value="33">33기</option><option value="32">32기</option><option value="31">31기</option><option value="30">30기</option><option value="29">29기</option><option value="28">28기</option><option value="27">27기</option><option value="26">26기</option><option value="25">25기</option><option value="24">24기</option><option value="23">23기</option><option value="22">22기</option><option value="21">21기</option><option value="20">20기</option><option value="19">19기</option><option value="18">18기</option><option value="17">17기</option><option value="16">16기</option><option value="15">15기</option><option value="14">14기</option><option value="13">13기</option><option value="12">12기</option><option value="11">11기</option><option value="10">10기</option><option value="9">9기</option><option value="8">8기</option><option value="7">7기</option><option value="6">6기</option><option value="5">5기</option><option value="4">4기</option><option value="3">3기</option><option value="2">2기</option><option value="1">1기</option><option value="0">0기</option></select></div><p class="field__helper" hidden></p></div>
+        <div class="field" data-f="suTeam"><label class="field__label" for="suTeam">팀<span class="req" aria-hidden="true">*</span></label><div class="field__wrap"><select class="field__control" id="suTeam"><option value="">선택</option><option>파생상품</option><option>퀀트</option><option>IBD</option><option>리서치</option></select></div><p class="field__helper" hidden></p></div>
+      </div>
+      <div class="field" data-f="suId"><label class="field__label" for="suId">아이디<span class="req" aria-hidden="true">*</span></label><div class="field__wrap auth-inline"><input class="field__control" id="suId" type="text" placeholder="영문 · 숫자 4~16자" autocomplete="username"><button class="btn btn--secondary auth-check" type="button" id="suIdCheck">중복 확인</button></div><p class="field__helper" data-help="영문 · 숫자 4~16자. 가입 후 바꿀 수 없습니다.">영문 · 숫자 4~16자. 가입 후 바꿀 수 없습니다.</p></div>
+      <div class="field" data-f="suPw"><label class="field__label" for="suPw">비밀번호<span class="req" aria-hidden="true">*</span></label><div class="field__wrap field__wrap--trail"><input class="field__control" id="suPw" type="password" placeholder="8자 이상" autocomplete="new-password" required><button class="field__trail-btn" type="button" aria-label="비밀번호 보기" data-pw="suPw"><svg class="icon"><use href="#i-eye"/></svg></button></div><p class="field__helper" data-help="영문 · 숫자를 섞어 8자 이상">영문 · 숫자를 섞어 8자 이상</p></div>
+      <div class="field" data-f="suPw2"><label class="field__label" for="suPw2">비밀번호 확인<span class="req" aria-hidden="true">*</span></label><div class="field__wrap field__wrap--trail"><input class="field__control" id="suPw2" type="password" placeholder="한 번 더 입력" autocomplete="new-password" required><button class="field__trail-btn" type="button" aria-label="비밀번호 보기" data-pw="suPw2"><svg class="icon"><use href="#i-eye"/></svg></button></div><p class="field__helper" data-help="" hidden></p></div>
+      <div class="field" data-f="suMail"><label class="field__label" for="suMail">이메일<span class="req" aria-hidden="true">*</span></label><div class="field__wrap"><input class="field__control" id="suMail" type="email" placeholder="example@hanyang.ac.kr" autocomplete="email" required></div><p class="field__helper" data-help="아이디 · 비밀번호를 찾을 때 이 주소로 메일을 보냅니다.">아이디 · 비밀번호를 찾을 때 이 주소로 메일을 보냅니다.</p></div>
+      <label class="check auth-agree" data-f="suAgree"><input type="checkbox" id="suAgree"><span class="check__box"><svg viewBox="0 0 16 16"><path d="M3.5 8.5 6.5 11.5 12.5 4.5"/></svg></span><span>(필수) 개인정보 수집 · 이용에 동의합니다. <small>이름 · 이메일 · 기수 · 팀을 학회원 확인과 계정 찾기에만 씁니다.</small></span></label>
+      <p class="field__helper auth-agree-err" id="suAgreeErr" hidden></p>
+      <button class="btn btn--primary btn--l auth-submit" type="submit">가입 신청</button>
+      <div class="auth-result" id="suResult" role="status" hidden></div>
+      <p class="auth-links">이미 계정이 있나요?<a href="/login">로그인</a></p>
+    </form>
+  </div>
+</section>
+</div>
+
 <!-- 하위 페이지 자리 (시안 전용. 실제 사이트에서는 각 주소가 별도 페이지) -->
 <div id="page" aria-live="polite">
   <section class="page-hero photo-section photo-section--dark" data-dark>
@@ -2020,8 +2064,8 @@
                      ['면접 후기', '정규직 · 인턴십 면접 후기 · 제목/내용 검색 (학회 밖 유출 금지)'],
                      ['Case Study', '팀 연합 스터디 case study 발표 자료 · 제목/내용 검색']] },
     '/login':      { en: 'Login', ko: '로그인', plan: [['아이디 · 비밀번호 · 로그인 상태 유지'], ['아이디 찾기 · 비밀번호 찾기 · 회원가입']] },
-    '/signup':     { en: 'Join', ko: '회원가입', plan: [['이름 · 아이디 · 비밀번호 · 비밀번호 확인'], ['관리자 승인 후 가입 완료']] },
-    '/logout':     { en: 'Logout', ko: '로그아웃', plan: [['로그아웃 후 홈으로 이동']] }
+    '/signup':     { en: 'Join', ko: '회원가입', plan: [['이름 · 입회 기수 · 팀 · 아이디 · 비밀번호 · 이메일'], ['관리자 승인 후 가입 완료']] },
+    '/logout':     { en: 'Logout', ko: '로그아웃', plan: [['누른 자리에서 바로 로그아웃 · 회원 전용 페이지였으면 홈으로']] }
   };
   const SUB = { '/reports/': { en: 'Report', ko: '리포트 상세', parent: '/reports', plan: [['리포트 정보', '분류 · 제목 · 작성자 · 발행일'], ['PDF 보기 · 다운로드']] },
                 '/lounge/schedule': { en: 'Schedule', ko: '일정표', parent: '/lounge', plan: [['전체 일정 · 팀별 일정']] },
@@ -2049,7 +2093,7 @@
     document.body.classList.toggle('is-about', isAbout);
     isAlumni = routed && path === '/alumni';
     document.body.classList.toggle('is-alumni', isAlumni);
-    const REAL = { '/login': ['is-login', 'loginHero', 'loginTitle', 'Login'], '/find-id': ['is-findid', 'findIdHero', 'findIdTitle', 'Find ID'], '/find-password': ['is-findpw', 'findPwHero', 'findPwTitle', 'Find Password'], '/lounge': ['is-sch', 'schHero', 'schPageTitle', 'Schedule'], '/lounge/schedule': ['is-sch', 'schHero', 'schPageTitle', 'Schedule'], '/lounge/case-study': ['is-cs', 'csHero', 'csPageTitle', 'Case Study'], '/lounge/interviews': ['is-iv', 'ivHero', 'ivPageTitle', 'Interviews'], '/reports': ['is-rpt', 'rptHero', 'rptPageTitle', 'Reports'], '/admin': ['is-adminpage', 'adminHero', 'adminTitle', 'Admin'], '/member/edit': ['is-edit', 'editHero', 'editTitle', 'My Profile'], '/curriculum': ['is-cur', 'curHero', 'curPageTitle', 'Curriculum'], '/history': ['is-hist', 'histHero', 'histPageTitle', 'History'], '/recruiting': ['is-rec', 'recHero', 'recPageTitle', 'Recruiting'] };
+    const REAL = { '/signup': ['is-signup', 'signupHero', 'signupTitle', 'Join'], '/login': ['is-login', 'loginHero', 'loginTitle', 'Login'], '/find-id': ['is-findid', 'findIdHero', 'findIdTitle', 'Find ID'], '/find-password': ['is-findpw', 'findPwHero', 'findPwTitle', 'Find Password'], '/lounge': ['is-sch', 'schHero', 'schPageTitle', 'Schedule'], '/lounge/schedule': ['is-sch', 'schHero', 'schPageTitle', 'Schedule'], '/lounge/case-study': ['is-cs', 'csHero', 'csPageTitle', 'Case Study'], '/lounge/interviews': ['is-iv', 'ivHero', 'ivPageTitle', 'Interviews'], '/reports': ['is-rpt', 'rptHero', 'rptPageTitle', 'Reports'], '/admin': ['is-adminpage', 'adminHero', 'adminTitle', 'Admin'], '/member/edit': ['is-edit', 'editHero', 'editTitle', 'My Profile'], '/curriculum': ['is-cur', 'curHero', 'curPageTitle', 'Curriculum'], '/history': ['is-hist', 'histHero', 'histPageTitle', 'History'], '/recruiting': ['is-rec', 'recHero', 'recPageTitle', 'Recruiting'] };
     realPage = routed ? REAL[path] : null;
     Object.values(REAL).forEach(([c]) => document.body.classList.toggle(c, !!realPage && realPage[0] === c));
     isMemberPage = routed && path === '/member';
@@ -2756,6 +2800,51 @@
     const a = fErr('fpId', fpId.value.trim() ? '' : '아이디를 입력하세요.'), b = fErr('fpMail', mailOk(fpMail.value.trim()) ? '' : '이메일 주소를 확인하세요.');
     fpResult.hidden = !(a && b); if (a && b) fpResult.innerHTML = `<b>메일을 보냈습니다</b><br>${fpMail.value.trim()}에서 링크를 눌러 새 비밀번호를 정하세요. 메일이 안 오면 스팸함을 확인하세요.`;
   });
+  /* ===== 회원가입 (v86) — 시안 동작. 실제는 Supabase Auth signUp + 신청 표(승인 대기) ===== */
+  const helpReset = id => { const f = document.querySelector(`[data-f="${id}"]`), p = f.querySelector('.field__helper'); f.classList.remove('is-error', 'is-ok'); if (p.dataset.help) { p.hidden = false; p.textContent = p.dataset.help; } else p.hidden = true; return true; };
+  const chk = (id, msg) => msg ? fErr(id, msg) : helpReset(id);
+  let idChecked = '';
+  const TAKEN = ['admin', 'hyfe', 'test'];   // 시안: 이미 있는 아이디 예시
+  suIdCheck.addEventListener('click', () => { const v = suId.value.trim();
+    if (!/^[A-Za-z0-9]{4,16}$/.test(v)) { fErr('suId', '영문 · 숫자 4~16자로 입력하세요.'); idChecked = ''; return; }
+    if (TAKEN.includes(v.toLowerCase())) { fErr('suId', '이미 쓰는 아이디입니다. 다른 아이디를 입력하세요.'); idChecked = ''; return; }
+    helpReset('suId'); const f = document.querySelector('[data-f="suId"]'); f.classList.add('is-ok'); f.querySelector('.field__helper').textContent = '쓸 수 있는 아이디입니다.'; idChecked = v; });
+  suId.addEventListener('input', () => { if (idChecked) { idChecked = ''; helpReset('suId'); } });
+  signupForm.addEventListener('submit', e => { e.preventDefault();
+    const ok = [
+      chk('suName', suName.value.trim() ? '' : '이름을 입력하세요.'),
+      chk('suGen', suGen.value ? '' : '입회 기수를 고르세요.'),
+      chk('suTeam', suTeam.value ? '' : '팀을 고르세요.'),
+      idChecked && idChecked === suId.value.trim() ? true : fErr('suId', !/^[A-Za-z0-9]{4,16}$/.test(suId.value.trim()) ? '영문 · 숫자 4~16자로 입력하세요.' : '아이디 중복 확인을 눌러 주세요.'),
+      chk('suPw', suPw.value.length >= 8 && /[A-Za-z]/.test(suPw.value) && /\d/.test(suPw.value) ? '' : '영문 · 숫자를 섞어 8자 이상으로 입력하세요.'),
+      chk('suPw2', suPw2.value && suPw2.value === suPw.value ? '' : '비밀번호가 서로 다릅니다.'),
+      chk('suMail', /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(suMail.value.trim()) ? '' : '이메일 주소를 확인하세요.')
+    ].every(Boolean);
+    suAgreeErr.hidden = suAgree.checked; suAgreeErr.textContent = '개인정보 수집 · 이용에 동의해야 신청할 수 있습니다.';
+    if (!ok || !suAgree.checked) { suResult.hidden = true; signupForm.querySelector('.is-error input, .is-error select')?.focus(); return; }
+    // 시안: 관리자 가입 승인 표에 바로 추가
+    const d = new Date(); APPLY.unshift({ name: suName.value.trim(), id: suId.value.trim(), gen: +suGen.value, team: suTeam.value, at: `${d.getMonth() + 1}.${d.getDate()}`, s: 'wait' }); renderAp();
+    suResult.hidden = false; suResult.innerHTML = '<b>가입 신청을 받았습니다</b><br>관리자가 학회원인지 확인한 뒤 승인하면 로그인할 수 있습니다.';
+    signupForm.querySelectorAll('input:not([type=checkbox]), select, .auth-check').forEach(el => el.disabled = true); signupForm.querySelector('.auth-submit').disabled = true;
+  });
+  /* v87 (사용자): 로그아웃은 따로 화면 없이 그 자리에서. 보던 페이지에 그대로 머물고,
+     회원만 보는 페이지(/lounge · /member/edit · /admin)에서 눌렀으면 홈으로. 실제는 Supabase signOut 뒤 같은 규칙 */
+  document.addEventListener("click", e => {
+    const a = e.target.closest("a[data-route=\"/logout\"], a[href=\"#/logout\"]"); if (!a) return;
+    e.preventDefault(); e.stopPropagation();
+    const pm = document.getElementById("pMember"), pa = document.getElementById("pAdmin");
+    if (pa) pa.checked = false; if (pm) pm.checked = false;
+    document.body.classList.remove("is-member", "is-admin");
+    const path = decodeURIComponent(location.hash).replace(/^#/, "");
+    const memberOnly = path.startsWith("/lounge") || path.startsWith("/member/") || path.startsWith("/admin");
+    if (typeof setMenu === "function") setMenu(false);
+    apply();
+    if (memberOnly) location.hash = "#home";
+    let t = document.getElementById("logoutToast");
+    if (!t) { t = document.createElement("div"); t.id = "logoutToast"; t.className = "toast-region"; t.setAttribute("role", "status"); document.body.append(t); }
+    t.innerHTML = "<div class=\"toast toast--success\"><svg class=\"icon toast__icon\" aria-hidden=\"true\"><use href=\"#i-check\"/></svg><div><p class=\"toast__title\">로그아웃했습니다</p></div></div>";
+    clearTimeout(t._h); t._h = setTimeout(() => t.innerHTML = "", 2200);
+  }, true);
   window.__edReady = true; apply();
 
   route();
